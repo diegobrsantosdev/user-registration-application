@@ -16,6 +16,13 @@ Simple **CRUD application** for user management built with **Spring Boot** and *
 - **Update user by ID** (`PUT /user?id={id}`)
 - **Delete user by email** (`DELETE /user?email={email}`)
 
+## Endpoints
+Method	Endpoint	Description	Params / Body
+POST	/user	Create user	JSON: {"name": "Name", "email": "email@example.com"}
+GET	/user	Get user by email	email param
+PUT	/user	Update user by ID	id param, JSON body optional: {"name":"...","email":"..."}
+DELETE	/user	Delete user by email	email param
+
 ## Running the App
 
 git clone <repo_url>
