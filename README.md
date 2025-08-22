@@ -17,7 +17,7 @@ Simple **CRUD application** for user management built with **Spring Boot** and *
 - **Delete user by email** (`DELETE /user?email={email}`)
 
 ## Running the App
-```bash
+
 git clone <repo_url>
 cd user-registration-applicat
 
