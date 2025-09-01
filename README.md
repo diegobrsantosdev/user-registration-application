@@ -27,6 +27,7 @@ The project demonstrates the use of **Spring Data JPA**, **Lombok**, and best pr
 
 ---
 
+```
 ## Project Structure
 
 com.diegobrsantosdev.user_registration_application
@@ -43,7 +44,7 @@ com.diegobrsantosdev.user_registration_application
 │ └─ UserRepository.java # Database access interface
 └─ resources/
 └─ application.properties # Application configuration
-
+```
 ---
 
 ## Endpoints
