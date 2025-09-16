@@ -1,7 +1,7 @@
 package com.diegobrsantosdev.user_registration_application.controller;
 
-import com.diegobrsantosdev.user_registration_application.business.UserService;
-import com.diegobrsantosdev.user_registration_application.infrastructure.entitys.User;
+import com.diegobrsantosdev.user_registration_application.services.UserService;
+import com.diegobrsantosdev.user_registration_application.infrastructure.entities.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

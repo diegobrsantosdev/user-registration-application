@@ -1,6 +1,6 @@
-package com.diegobrsantosdev.user_registration_application.infrastructure.repository;
+package com.diegobrsantosdev.user_registration_application.infrastructure.repositories;
 
-import com.diegobrsantosdev.user_registration_application.infrastructure.entitys.User;
+import com.diegobrsantosdev.user_registration_application.infrastructure.entities.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

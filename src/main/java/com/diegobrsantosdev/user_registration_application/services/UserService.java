@@ -1,7 +1,7 @@
-package com.diegobrsantosdev.user_registration_application.business;
+package com.diegobrsantosdev.user_registration_application.services;
 
-import com.diegobrsantosdev.user_registration_application.infrastructure.entitys.User;
-import com.diegobrsantosdev.user_registration_application.infrastructure.repository.UserRepository;
+import com.diegobrsantosdev.user_registration_application.infrastructure.entities.User;
+import com.diegobrsantosdev.user_registration_application.infrastructure.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
