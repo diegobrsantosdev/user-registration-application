@@ -1,8 +1,12 @@
-package com.diegobrsantosdev.user_registration_application.infrastructure.entities;
+package com.diegobrsantosdev.user_registration_application.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.processing.Pattern;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -34,7 +38,7 @@ public class User {
     private String phone;
 
     @Column(name = "adress")
-    private String adress;
+    private String address;
 
     @Column(name = "number")
     private String number;
@@ -53,5 +57,14 @@ public class User {
 
     @Column(name = "zip_code", nullable = false, length = 8)
     private String zipCode;
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
 
 }

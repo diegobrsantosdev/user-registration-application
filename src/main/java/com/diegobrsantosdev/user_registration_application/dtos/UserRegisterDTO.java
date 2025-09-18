@@ -39,4 +39,7 @@ public record UserRegisterDTO(
 
     @NotBlank(message = "ZIP code is required")
     String zipCode
+
+    //CREATEDAT/UPDATEDAT are automatic
+
 ) {}

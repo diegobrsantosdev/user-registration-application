@@ -1,26 +1,28 @@
 package com.diegobrsantosdev.user_registration_application.config;
 
-import com.diegobrsantosdev.user_registration_application.infrastructure.entities.User;
-import com.diegobrsantosdev.user_registration_application.infrastructure.repositories.UserRepository;
+import com.diegobrsantosdev.user_registration_application.entities.User;
+import com.diegobrsantosdev.user_registration_application.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 @Configuration
-@Profile("Test")
+@Profile("test")
+@ComponentScan(basePackages = {"com.diegobrsantosdev.user_registration_application"})
+@Import(SecurityConfig.class)
 public class TestConfig {
 
     @Bean
-    public CommandLineRunner loader(UserRepository userRepository) {
+    public CommandLineRunner loader(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
             userRepository.save(User.builder()
                 .name("João Silva")
                 .email("joao@email.com")
-                .password("senha1234")
+                .password(passwordEncoder.encode("senha1234"))
                 .cpf("12345678901")
                 .phone("11999998888")
-                .adress("Rua Alpha")
+                .address("Rua Alpha")
                 .number("100")
                 .complement("Apto 12")
                 .neighborhood("Centro")
@@ -33,12 +35,12 @@ public class TestConfig {
             userRepository.save(User.builder()
                 .name("Maria Souza")
                 .email("maria@email.com")
-                .password("senha5678")
+                    .password(passwordEncoder.encode("senha5678"))
                 .cpf("98765432100")
                 .phone("21988887777")
-                .adress("Rua Beta")
+                .address("Rua Beta")
                 .number("500")
-                .complement("")
+                .complement("Casa")
                 .neighborhood("Bela Vista")
                 .city("Rio de Janeiro")
                 .state("RJ")
@@ -49,10 +51,10 @@ public class TestConfig {
             userRepository.save(User.builder()
                     .name("Caio Pereira")
                     .email("caiopereiraaa19@gmail.com")
-                    .password("56edabc10")
+                    .password(passwordEncoder.encode("rsjssenha4055"))
                     .cpf("48520695490")
                     .phone("81987501006")
-                    .adress("Rua Padre Alencar")
+                    .address("Rua Padre Alencar")
                     .number("256")
                     .complement("casa")
                     .neighborhood("Santo Amaro")
