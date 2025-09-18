@@ -1,6 +1,7 @@
 package com.diegobrsantosdev.user_registration_application.mappers;
 
 import com.diegobrsantosdev.user_registration_application.dtos.UserRegisterDTO;
+import com.diegobrsantosdev.user_registration_application.dtos.UserUpdateDTO;
 import com.diegobrsantosdev.user_registration_application.entities.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -8,19 +9,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper {
 
-    private final PasswordEncoder passwordEncoder;
-
-    public UserMapper(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-
     public User toEntity(UserRegisterDTO dto) {
         if (dto == null) return null;
 
         return User.builder()
                 .name(dto.name())
                 .email(dto.email())
-                .password(passwordEncoder.encode(dto.password()))
                 .cpf(dto.cpf())
                 .phone(dto.phone())
                 .address(dto.address())
@@ -34,10 +28,9 @@ public class UserMapper {
 
     }
 
-    public void updateEntityFromDto(User user, UserRegisterDTO dto) {
+    public void updateEntityFromDto(User user, UserUpdateDTO dto) {
         user.setName(dto.name());
         user.setEmail(dto.email());
-        user.setPassword(passwordEncoder.encode(dto.password()));
         user.setCpf(dto.cpf());
         user.setPhone(dto.phone());
         user.setAddress(dto.address());
@@ -48,5 +41,8 @@ public class UserMapper {
         user.setState(dto.state());
         user.setZipCode(dto.zipCode());
     }
+
+    //password must be set and cryptographed out of mapper
+
 
 }

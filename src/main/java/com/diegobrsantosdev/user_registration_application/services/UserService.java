@@ -3,14 +3,15 @@ package com.diegobrsantosdev.user_registration_application.services;
 import com.diegobrsantosdev.user_registration_application.dtos.PasswordDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.UserRegisterDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.UserResponseDTO;
+import com.diegobrsantosdev.user_registration_application.dtos.UserUpdateDTO;
 import com.diegobrsantosdev.user_registration_application.entities.User;
 import com.diegobrsantosdev.user_registration_application.exceptions.IncorrectPasswordException;
 import com.diegobrsantosdev.user_registration_application.exceptions.ResourceAlreadyExistsException;
 import com.diegobrsantosdev.user_registration_application.exceptions.ResourceNotFoundException;
 import com.diegobrsantosdev.user_registration_application.mappers.UserMapper;
 import com.diegobrsantosdev.user_registration_application.repositories.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,14 +31,16 @@ public class UserService {
     // ========= CREATE =========
     @Transactional
     public UserResponseDTO registerUser(UserRegisterDTO dto) {
-
         checkDuplicate("CPF", userRepository.findByCpf(dto.cpf()));
         checkDuplicate("Email", userRepository.findByEmail(dto.email()));
+        User user = userMapper.toEntity(dto);
 
+        user.setPassword(passwordEncoder.encode(dto.password()));
 
-        User savedUser = userRepository.save(userMapper.toEntity(dto));
+        User savedUser = userRepository.save(user);
         return UserResponseDTO.fromEntity(savedUser);
     }
+
 
     // ========= READ =========
     public UserResponseDTO getUserById(Integer id) {
@@ -63,7 +66,7 @@ public class UserService {
 
     // ========= UPDATE =========
     @Transactional
-    public UserResponseDTO updateUser(Integer id, UserRegisterDTO dto) {
+    public UserResponseDTO updateUser(Integer id, @Valid UserUpdateDTO dto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 

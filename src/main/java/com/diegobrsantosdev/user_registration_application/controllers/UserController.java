@@ -3,6 +3,7 @@ package com.diegobrsantosdev.user_registration_application.controllers;
 import com.diegobrsantosdev.user_registration_application.dtos.PasswordDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.UserRegisterDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.UserResponseDTO;
+import com.diegobrsantosdev.user_registration_application.dtos.UserUpdateDTO;
 import com.diegobrsantosdev.user_registration_application.exceptions.ResourceNotFoundException;
 import com.diegobrsantosdev.user_registration_application.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import jakarta.validation.Valid;
 
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     private final UserService service;
@@ -66,8 +67,8 @@ public class UserController {
 
     // ========= UPDATE =========
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Integer id, 
-                                                     @RequestBody @Valid UserRegisterDTO dto) {
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Integer id,
+                                                     @RequestBody @Valid UserUpdateDTO dto) {
         UserResponseDTO updated = service.updateUser(id, dto);
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }

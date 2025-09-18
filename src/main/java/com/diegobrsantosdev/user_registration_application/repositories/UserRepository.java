@@ -12,12 +12,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByCpf(String cpf);
 
-    Optional<User> findById(Integer id);
-
     Optional<User> findByEmail(String email);
-
-    @Transactional
-    void deleteByEmail(String email);
 
     @Transactional
     void deleteById(Integer id);
