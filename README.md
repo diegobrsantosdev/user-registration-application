@@ -5,9 +5,10 @@
 
 ## 🇧🇷 Descrição (Português)
 
-O **User Registration Application** é um sistema **CRUD** para gerenciamento de usuários, desenvolvido em **Spring Boot**. Permite registrar, consultar, atualizar e remover usuários via **API RESTful**.
-
-O projeto usa **H2 Database (in-memory)** para fácil execução local e segue boas práticas de organização, validação e mapeamento de dados.
+O **User Registration Application** é um sistema **CRUD** para gerenciamento de usuários, desenvolvido em **Spring Boot**.
+Permite registrar, consultar, atualizar e remover usuários via **API RESTful**.
+O projeto usa **H2 Database (in-memory)** para fácil execução local e segue boas práticas de organização,
+validação e mapeamento de dados.
 
 > **⚠ Este projeto está em desenvolvimento e pode sofrer alterações.**
 
@@ -40,7 +41,9 @@ O projeto usa **H2 Database (in-memory)** para fácil execução local e segue b
 
 ### Estrutura do Projeto
 ```
-src/main/java/com/diegobrsantosdev/user_registration_application │ ├─ UserRegistrationApplication.java # Classe principal ├─ config/ # Configurações ├─ controllers/ # Controllers REST ├─ dtos/ # DTOs (transferência de dados) ├─ entities/ # Entidades JPA ├─ exceptions/ # Exceções e handler global ├─ mappers/ # Conversão DTO <-> Entity ├─ repositories/ # Repositórios JPA ├─ services/ # Camada de serviço └─ resources/ # application.properties, etc.
+src/main/java/com/diegobrsantosdev/user_registration_application │ ├─ UserRegistrationApplication.java # Classe principal ├─ config/ # Configurações
+├─ controllers/ # Controllers REST ├─ dtos/ # DTOs (transferência de dados) ├─ entities/ # Entidades JPA ├─ exceptions/ # Exceções e handler global
+├─ mappers/ # Conversão DTO <-> Entity ├─ repositories/ # Repositórios JPA ├─ services/ # Camada de serviço └─ resources/ # application.properties, etc.
 ``` 
 
 ---
@@ -61,7 +64,8 @@ src/main/java/com/diegobrsantosdev/user_registration_application │ ├─ User
 
 #### Exemplo de JSON
 ```
-json { "name": "João Silva", "email": "joao@email.com", "password": "minhasenha123", "cpf": "12345678900", "phone": "11999999999", "address": "Rua Exemplo", "number": "123", "complement": "", "neighborhood": "Centro", "city": "São Paulo", "state": "SP", "zipCode": "01001000" }
+json { "name": "João Silva", "email": "joao@email.com", "password": "minhasenha123", "cpf": "12345678900", "phone": "11999999999",
+"address": "Rua Exemplo", "number": "123", "complement": "", "neighborhood": "Centro", "city": "São Paulo", "state": "SP", "zipCode": "01001000" }
 ``` 
 
 ---
@@ -91,8 +95,8 @@ json { "name": "João Silva", "email": "joao@email.com", "password": "minhasenha
 
 ## 🇺🇸 Description (English)
 
-**User Registration Application** is a **CRUD system** for user management, built with **Spring Boot**. It provides create, read, update, and delete operations through a **RESTful API**, following best practices.
-
+**User Registration Application** is a **CRUD system** for user management, built with **Spring Boot**.
+It provides create, read, update, and delete operations through a **RESTful API**, following best practices.
 The project uses **H2 Database (in-memory)** for easy local execution and applies proper organization, validation, and data mapping.
 
 > ** This project is under development and may change.**
@@ -126,7 +130,9 @@ The project uses **H2 Database (in-memory)** for easy local execution and applie
 
 ### Project Structure
 ```
-src/main/java/com/diegobrsantosdev/user_registration_application │ ├─ UserRegistrationApplication.java # Main class ├─ config/ # Configuration ├─ controllers/ # REST Controllers ├─ dtos/ # DTOs (data transfer) ├─ entities/ # JPA Entities ├─ exceptions/ # Custom exceptions and handler ├─ mappers/ # DTO <-> Entity conversion ├─ repositories/ # JPA Repositories ├─ services/ # Business logic layer └─ resources/ # application.properties, etc.
+src/main/java/com/diegobrsantosdev/user_registration_application │ ├─ UserRegistrationApplication.java # Main class ├─ config/ # Configuration
+├─ controllers/ # REST Controllers ├─ dtos/ # DTOs (data transfer) ├─ entities/ # JPA Entities ├─ exceptions/ # Custom exceptions and handler
+├─ mappers/ # DTO <-> Entity conversion ├─ repositories/ # JPA Repositories ├─ services/ # Business logic layer └─ resources/ # application.properties, etc.
 ``` 
 
 ---
@@ -147,7 +153,8 @@ src/main/java/com/diegobrsantosdev/user_registration_application │ ├─ User
 
 #### Example JSON
 ```
-json { "name": "John Smith", "email": "john@email.com", "password": "mysecurepassword", "cpf": "12345678900", "phone": "11987654321", "address": "Sample Street", "number": "123", "complement": "", "neighborhood": "Downtown", "city": "São Paulo", "state": "SP", "zipCode": "01001000" }
+json { "name": "John Smith", "email": "john@email.com", "password": "mysecurepassword", "cpf": "12345678900", "phone": "11987654321",
+"address": "Sample Street", "number": "123", "complement": "", "neighborhood": "Downtown", "city": "São Paulo", "state": "SP", "zipCode": "01001000" }
 ``` 
 
 ---
