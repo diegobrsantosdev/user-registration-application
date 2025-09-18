@@ -5,7 +5,7 @@
 
 ## 🇧🇷 Descrição (Português)
 
-O **User Registration Application** é um sistema **CRUD** para gerenciamento de usuários, desenvolvido em **Spring Boot**.
+O *User Registration Application* é um sistema **CRUD** para gerenciamento de usuários, desenvolvido em **Spring Boot**.
 Permite registrar, consultar, atualizar e remover usuários via **API RESTful**.
 O projeto usa **H2 Database (in-memory)** para fácil execução local e segue boas práticas de organização,
 validação e mapeamento de dados.
