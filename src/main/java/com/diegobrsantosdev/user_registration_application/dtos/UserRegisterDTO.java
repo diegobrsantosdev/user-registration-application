@@ -1,5 +1,6 @@
 package com.diegobrsantosdev.user_registration_application.dtos;
 
+import com.diegobrsantosdev.user_registration_application.validators.ValidCpf;
 import jakarta.validation.constraints.*;
 
 public record UserRegisterDTO(
@@ -17,6 +18,7 @@ public record UserRegisterDTO(
     @NotBlank(message = "CPF is required")
     @Size(min = 11, max = 11, message = "CPF must have exactly 11 digits")
     @Pattern(regexp = "\\d{11}", message = "CPF must contain only digits")
+    @ValidCpf
     String cpf,
 
     @NotBlank(message = "Phone is required")
