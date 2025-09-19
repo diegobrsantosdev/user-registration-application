@@ -1,5 +1,6 @@
 package com.diegobrsantosdev.user_registration_application.exceptions;
 
+import com.diegobrsantosdev.user_registration_application.viaCep.CepNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,7 @@ import java.time.Instant;
 @ControllerAdvice
 public class ResourceExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<StandardError> resourceNotFound(ResourceNotFoundException e, HttpServletRequest request){
+    public ResponseEntity<StandardError> resourceNotFound(ResourceNotFoundException e, HttpServletRequest request) {
         String error = "Resource not found";
         HttpStatus status = HttpStatus.NOT_FOUND;
         StandardError err = new StandardError(
@@ -21,7 +22,7 @@ public class ResourceExceptionHandler {
     }
 
     @ExceptionHandler(ResourceAlreadyExistsException.class)
-    public ResponseEntity<StandardError> resourceAlreadyExists(ResourceAlreadyExistsException e, HttpServletRequest request){
+    public ResponseEntity<StandardError> resourceAlreadyExists(ResourceAlreadyExistsException e, HttpServletRequest request) {
         String error = "Resource already exists";
         HttpStatus status = HttpStatus.CONFLICT; // 409
         StandardError err = new StandardError(
@@ -30,7 +31,7 @@ public class ResourceExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<StandardError> illegalArgument(IllegalArgumentException e, HttpServletRequest request){
+    public ResponseEntity<StandardError> illegalArgument(IllegalArgumentException e, HttpServletRequest request) {
         String error = "Invalid argument";
         HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError err = new StandardError(
@@ -56,7 +57,7 @@ public class ResourceExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<StandardError> generic(Exception e, HttpServletRequest request){
+    public ResponseEntity<StandardError> generic(Exception e, HttpServletRequest request) {
         String error = "Unexpected error";
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         StandardError err = new StandardError(
@@ -85,7 +86,15 @@ public class ResourceExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 
-
-
-
+    @ExceptionHandler(CepNotFoundException.class)
+    public ResponseEntity<StandardError> cepNotFound(CepNotFoundException e, HttpServletRequest request) {
+        String error = "CEP not found";
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        StandardError err = new StandardError(
+                Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI()
+        );
+        return ResponseEntity.status(status).body(err);
+    }
 }
+
+
