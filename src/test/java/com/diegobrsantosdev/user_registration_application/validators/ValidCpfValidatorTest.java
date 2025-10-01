@@ -9,18 +9,18 @@ public class ValidCpfValidatorTest {
 
     @Test
     void testValidCpfs() {
-        // CPFs válidos reais ou de exemplo
-        assertTrue(validator.isValid("52998224725", null)); // Válido
-        assertTrue(validator.isValid("12345678909", null)); // Válido
+
+        assertTrue(validator.isValid("52998224725", null));
+        assertTrue(validator.isValid("12345678909", null));
     }
 
     @Test
     void testInvalidCpfs() {
-        // CPFs inválidos
-        assertFalse(validator.isValid("11111111111", null)); // Repetido
-        assertFalse(validator.isValid("12345678901", null)); // Dígito errado
-        assertFalse(validator.isValid("abcdefghijk", null)); // Letras
-        assertFalse(validator.isValid("5299822472", null));  // Menos de 11 dígitos
-        assertFalse(validator.isValid(null, null));          // Nulo
+
+        assertFalse(validator.isValid("11111111111", null));
+        assertFalse(validator.isValid("12345678901", null));
+        assertFalse(validator.isValid("abcdefghijk", null));
+        assertFalse(validator.isValid("5299822472", null));
+        assertFalse(validator.isValid(null, null));
     }
 }
