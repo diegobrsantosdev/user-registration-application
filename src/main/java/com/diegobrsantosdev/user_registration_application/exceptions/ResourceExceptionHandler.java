@@ -4,6 +4,7 @@ import com.diegobrsantosdev.user_registration_application.viaCep.CepNotFoundExce
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -94,6 +95,16 @@ public class ResourceExceptionHandler {
                 Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI()
         );
         return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(DuplicateCpfException.class)
+    public ResponseEntity<String> handleDuplicateCpf(DuplicateCpfException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<String> handleDuplicateEmail(DuplicateEmailException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 }
 

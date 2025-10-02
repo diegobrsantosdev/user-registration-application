@@ -5,9 +5,7 @@ import com.diegobrsantosdev.user_registration_application.dtos.UserRegisterDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.UserResponseDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.UserUpdateDTO;
 import com.diegobrsantosdev.user_registration_application.entities.User;
-import com.diegobrsantosdev.user_registration_application.exceptions.IncorrectPasswordException;
-import com.diegobrsantosdev.user_registration_application.exceptions.ResourceAlreadyExistsException;
-import com.diegobrsantosdev.user_registration_application.exceptions.ResourceNotFoundException;
+import com.diegobrsantosdev.user_registration_application.exceptions.*;
 import com.diegobrsantosdev.user_registration_application.mappers.UserMapper;
 import com.diegobrsantosdev.user_registration_application.repositories.UserRepository;
 import jakarta.transaction.Transactional;
@@ -31,10 +29,15 @@ public class UserService {
     // ========= CREATE =========
     @Transactional
     public UserResponseDTO registerUser(UserRegisterDTO dto) {
-        checkDuplicate("CPF", userRepository.findByCpf(dto.cpf()));
-        checkDuplicate("Email", userRepository.findByEmail(dto.email()));
-        User user = userMapper.toEntity(dto);
+        if (userRepository.findByCpf(dto.cpf()).isPresent()) {
+            throw new DuplicateCpfException("There is already a user with this CPF");
+        }
 
+        if (userRepository.findByEmail(dto.email()).isPresent()) {
+            throw new DuplicateEmailException("There is already a user with this email");
+        }
+
+        User user = userMapper.toEntity(dto);
         user.setPassword(passwordEncoder.encode(dto.password()));
 
         User savedUser = userRepository.save(user);
