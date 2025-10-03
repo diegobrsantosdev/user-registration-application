@@ -1,6 +1,9 @@
 package com.diegobrsantosdev.user_registration_application.controllers;
 
 import com.diegobrsantosdev.user_registration_application.dtos.*;
+import com.diegobrsantosdev.user_registration_application.exceptions.DuplicateCpfException;
+import com.diegobrsantosdev.user_registration_application.exceptions.DuplicateEmailException;
+import com.diegobrsantosdev.user_registration_application.exceptions.ResourceNotFoundException;
 import com.diegobrsantosdev.user_registration_application.services.UserService;
 import com.diegobrsantosdev.user_registration_application.viaCep.CepController;
 import com.diegobrsantosdev.user_registration_application.viaCep.CepService;
@@ -63,6 +66,18 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.cpf").value(user.cpf()));
     }
+    //
+    @Test
+    @DisplayName("Should return 404 when user not found by ID")
+    void shouldReturn404WhenUserNotFoundById() throws Exception {
+        Mockito.when(userService.getUserById(999))
+                .thenThrow(new ResourceNotFoundException("User not found"));
+
+        mockMvc.perform(get("/api/v1/users/999"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("User not found"));
+    }
+
 
     @Test
     @DisplayName("Should return 404 if user is not found by CPF")
@@ -159,6 +174,70 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.email").value(resp.email()))
                 .andExpect(jsonPath("$.cpf").value(resp.cpf()));
     }
+
+    //
+    @Test
+    @DisplayName("Should return 409 when CPF is already registered")
+    void shouldReturn409WhenCpfDuplicated() throws Exception {
+        var req = new UserRegisterDTO(
+                "Name",
+                "other@email.com",
+                "12345678901",
+                "12345678909",
+                "81999999999",
+                "Rua Teste",
+                "123",
+                "Apto 101",
+                "Centro",
+                "Recife",
+                "PE",
+                "50000000"
+        );
+
+        Mockito.when(userService.registerUser(any(UserRegisterDTO.class)))
+                .thenThrow(new DuplicateCpfException("CPF already registered"));
+
+        mockMvc.perform(post("/api/v1/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isConflict())
+                .andExpect(content().string("CPF already registered"));
+    }
+
+
+    //
+    @Test
+    @DisplayName("Should return 409 when email is already registered")
+    void shouldReturn409WhenEmailDuplicated() throws Exception {
+        var req = new UserRegisterDTO(
+                "Name",
+                "email@email.com",
+                "12345678901",
+                "12345678909",
+                "81999999999",
+                "Rua Teste",
+                "123",
+                "Apto 101",
+                "Centro",
+                "Recife",
+                "PE",
+                "50000000"
+        );
+
+        Mockito.when(userService.registerUser(any(UserRegisterDTO.class)))
+                .thenThrow(new DuplicateEmailException("Email already registered"));
+
+        mockMvc.perform(post("/api/v1/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isConflict())
+                .andExpect(content().string("Email already registered"));
+    }
+
+
+
+
+
     @Test
     @DisplayName("Should update user password")
     void shouldUpdateUserPassword() throws Exception {
