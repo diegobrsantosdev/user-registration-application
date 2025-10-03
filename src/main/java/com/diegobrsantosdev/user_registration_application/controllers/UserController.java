@@ -50,7 +50,6 @@ public class UserController {
         return ResponseEntity.badRequest().body(null);
     }
 
-
     @GetMapping("/all")
     public ResponseEntity<Page<UserResponseDTO>> listAllUsers(Pageable pageable) {
         Page<UserResponseDTO> users = service.listAllUsers(pageable);
