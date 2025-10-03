@@ -66,7 +66,7 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.cpf").value(user.cpf()));
     }
-    //
+
     @Test
     @DisplayName("Should return 404 when user not found by ID")
     void shouldReturn404WhenUserNotFoundById() throws Exception {
@@ -175,7 +175,34 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.cpf").value(resp.cpf()));
     }
 
-    //
+    @Test
+    @DisplayName("Should return 404 when trying to update a non-existent user")
+    void shouldReturn404WhenUpdatingNonExistentUser() throws Exception {
+        var updateDTO = new UserUpdateDTO(
+                "Updated Name",
+                "updated@email.com",
+                "98765432100",
+                "81999999999",
+                "Rua Atualizada",
+                "456",
+                "Apto 202",
+                "Boa Vista",
+                "Recife",
+                "PE",
+                "50001000"
+        );
+
+        Mockito.when(userService.updateUser(eq(99), any(UserUpdateDTO.class)))
+                .thenThrow(new ResourceNotFoundException("User not found"));
+
+        mockMvc.perform(put("/api/v1/users/99")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateDTO)))
+                .andExpect(status().isNotFound());
+    }
+
+
+
     @Test
     @DisplayName("Should return 409 when CPF is already registered")
     void shouldReturn409WhenCpfDuplicated() throws Exception {
@@ -205,7 +232,7 @@ class UserControllerTest {
     }
 
 
-    //
+
     @Test
     @DisplayName("Should return 409 when email is already registered")
     void shouldReturn409WhenEmailDuplicated() throws Exception {
@@ -237,7 +264,6 @@ class UserControllerTest {
 
 
 
-
     @Test
     @DisplayName("Should update user password")
     void shouldUpdateUserPassword() throws Exception {
@@ -258,5 +284,16 @@ class UserControllerTest {
         mockMvc.perform(delete("/api/v1/users/3"))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    @DisplayName("Should return 404 when trying to delete a non-existent user")
+    void shouldReturn404WhenDeletingNonExistentUser() throws Exception {
+        Mockito.doThrow(new ResourceNotFoundException("User not found"))
+                .when(userService).deleteUser(99);
+
+        mockMvc.perform(delete("/api/v1/users/99"))
+                .andExpect(status().isNotFound());
+    }
+
 }
 
