@@ -9,14 +9,12 @@ public class ValidCpfValidatorTest {
 
     @Test
     void testValidCpfs() {
-
         assertTrue(validator.isValid("52998224725", null));
         assertTrue(validator.isValid("12345678909", null));
     }
 
     @Test
     void testInvalidCpfs() {
-
         assertFalse(validator.isValid("11111111111", null));
         assertFalse(validator.isValid("12345678901", null));
         assertFalse(validator.isValid("abcdefghijk", null));
