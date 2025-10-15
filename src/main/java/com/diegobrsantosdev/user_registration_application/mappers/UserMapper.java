@@ -2,8 +2,7 @@ package com.diegobrsantosdev.user_registration_application.mappers;
 
 import com.diegobrsantosdev.user_registration_application.dtos.UserRegisterDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.UserUpdateDTO;
-import com.diegobrsantosdev.user_registration_application.entities.User;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.diegobrsantosdev.user_registration_application.models.User;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,7 +1,7 @@
 package com.diegobrsantosdev.user_registration_application.service;
 
 import com.diegobrsantosdev.user_registration_application.dtos.*;
-import com.diegobrsantosdev.user_registration_application.entities.User;
+import com.diegobrsantosdev.user_registration_application.models.User;
 import com.diegobrsantosdev.user_registration_application.exceptions.*;
 import com.diegobrsantosdev.user_registration_application.mappers.UserMapper;
 import com.diegobrsantosdev.user_registration_application.repositories.UserRepository;

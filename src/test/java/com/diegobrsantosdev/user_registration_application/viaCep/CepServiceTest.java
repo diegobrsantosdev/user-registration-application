@@ -1,24 +1,62 @@
 package com.diegobrsantosdev.user_registration_application.viaCep;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CepServiceTest {
 
-    @Test
-    void shouldThrowExceptionWhenCepNotFound() {
-        CepService cepService = new CepService() {
+    private CepService cepService;
+
+    @BeforeEach
+    void setup() {
+        cepService = new CepService() {
             @Override
             public CepResponseDTO lookupCep(String cep) {
-                throw new CepNotFoundException(cep);
+                // Simulate behavior
+                if (cep == null || !cep.matches("^[0-9]{8}$")) {
+                    throw new IllegalArgumentException("Invalid CEP format. Use only 8 numeric digits.");
+                }
+                if (cep.equals("99999999")) {
+                    throw new CepNotFoundException(cep);
+                }
+                // returns a response for valid CEP
+                return new CepResponseDTO(
+                        cep,
+                        "Street",
+                        "Complement",
+                        "Neighborhood",
+                        "City",
+                        "State"
+                );
             }
         };
+    }
 
-        String cepInvalido = "99999999";
+    @Test
+    void shouldThrowExceptionWhenCepNotFound() {
+        String invalidCep = "99999999";
         CepNotFoundException thrown = assertThrows(
-            CepNotFoundException.class,
-            () -> cepService.lookupCep(cepInvalido)
+                CepNotFoundException.class,
+                () -> cepService.lookupCep(invalidCep)
         );
+        assertTrue(thrown.getMessage().contains(invalidCep));
+    }
 
-        assertTrue(thrown.getMessage().contains(cepInvalido));
+    @Test
+    void shouldThrowExceptionForInvalidFormat() {
+        String invalidFormatCep = "12345-678";
+        IllegalArgumentException thrown = assertThrows(
+                IllegalArgumentException.class,
+                () -> cepService.lookupCep(invalidFormatCep)
+        );
+        assertTrue(thrown.getMessage().contains("Invalid CEP format"));
+    }
+
+    @Test
+    void shouldReturnValidResponseForValidCep() {
+        String validCep = "01001000";
+        CepResponseDTO response = cepService.lookupCep(validCep);
+        assertEquals(validCep, response.zipCode());
+        assertEquals("Street", response.address());
     }
 }

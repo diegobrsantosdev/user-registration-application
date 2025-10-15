@@ -1,10 +1,9 @@
-package com.diegobrsantosdev.user_registration_application.entities;
+package com.diegobrsantosdev.user_registration_application.models;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.processing.Pattern;
 
 import java.time.LocalDateTime;
 

@@ -47,7 +47,7 @@ class UserIntegrationTest {
                 "50000000"
         );
 
-        // 2️⃣ Send a post do register a new user
+        // 2⃣Send a post do register a new user
         mockMvc.perform(post("/api/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(user)))
@@ -56,7 +56,7 @@ class UserIntegrationTest {
                 .andExpect(jsonPath("$.name").value("Name"))
                 .andExpect(jsonPath("$.email").value("email@email.com"));
 
-        // 3️⃣ Get user recently created by cpf
+        //  Get user recently created by cpf
         mockMvc.perform(get("/api/v1/users")
                         .param("cpf", "12345678909"))
                 .andExpect(status().isOk())

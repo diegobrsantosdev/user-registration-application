@@ -4,7 +4,7 @@ import com.diegobrsantosdev.user_registration_application.dtos.PasswordDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.UserRegisterDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.UserResponseDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.UserUpdateDTO;
-import com.diegobrsantosdev.user_registration_application.entities.User;
+import com.diegobrsantosdev.user_registration_application.models.User;
 import com.diegobrsantosdev.user_registration_application.exceptions.*;
 import com.diegobrsantosdev.user_registration_application.mappers.UserMapper;
 import com.diegobrsantosdev.user_registration_application.repositories.UserRepository;

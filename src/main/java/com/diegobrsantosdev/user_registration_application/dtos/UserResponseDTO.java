@@ -1,6 +1,6 @@
 package com.diegobrsantosdev.user_registration_application.dtos;
 
-import com.diegobrsantosdev.user_registration_application.entities.User;
+import com.diegobrsantosdev.user_registration_application.models.User;
 
 import java.time.LocalDateTime;
 

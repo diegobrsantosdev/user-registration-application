@@ -1,6 +1,6 @@
 package com.diegobrsantosdev.user_registration_application.config;
 
-import com.diegobrsantosdev.user_registration_application.entities.User;
+import com.diegobrsantosdev.user_registration_application.models.User;
 import com.diegobrsantosdev.user_registration_application.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.*;
