@@ -59,7 +59,7 @@ Legenda: Documentação interativa da API com Swagger UI.
 - **Criptografia de Senhas:**
 As senhas dos usuários são protegidas através de criptografia utilizando algoritmos de hash robustos fornecidos pelo Spring Security, via implementação do . Isso garante que nenhuma senha seja armazenada em texto puro no banco de dados, dificultando acessos não autorizados, mesmo em caso de vazamento de dados. Durante o processo de autenticação e alteração de senha, todas as comparações e atualizações são realizadas de forma segura, seguindo as melhores práticas do mercado para proteção de informações sensíveis. `PasswordEncoder`
 
-![Banco de dados h2](assets/Captura25.png)
+![Banco de dados h2](assets/captura25.png)
 
 Legenda: Visualização do banco de dados em memória (H2).
 
