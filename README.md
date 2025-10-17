@@ -4,6 +4,7 @@ Aplicação de cadastro de usuários desenvolvida com o ecossistema Spring (Spri
 Permite criar, consultar, listar, atualizar dados de usuários e consultar endereço por CEP de forma automatizada.
 
 ![Postar usuário](assets/captura22.png)
+
 Legenda: Cadastro pelo endpoint de criação de usuário.
 
 ## Arquitetura & Organização
@@ -50,6 +51,7 @@ src/main/java/com/diegobrsantosdev/user_registration_application
 | GET | `/api/v1/cep/{cep}` | Buscar endereço por CEP |
 
 ![Swagger](assets/captura21.png)
+
 Legenda: Documentação interativa da API com Swagger UI.
 
 
@@ -58,12 +60,14 @@ Legenda: Documentação interativa da API com Swagger UI.
 As senhas dos usuários são protegidas através de criptografia utilizando algoritmos de hash robustos fornecidos pelo Spring Security, via implementação do . Isso garante que nenhuma senha seja armazenada em texto puro no banco de dados, dificultando acessos não autorizados, mesmo em caso de vazamento de dados. Durante o processo de autenticação e alteração de senha, todas as comparações e atualizações são realizadas de forma segura, seguindo as melhores práticas do mercado para proteção de informações sensíveis. `PasswordEncoder`
 
 ![Banco de dados h2](assets/Captura25.png)
+
 Legenda: Visualização do banco de dados em memória (H2).
 
 - **Integração ViaCEP:**
 Busca automática de informações de endereço via API pública.
 
 ![Consulta por cep](assets/captura18.png)      ![Consulta por cep incorreta](assets/captura19.png)
+
 Legenda: À esquerda, consulta de CEP válida; à direita, resposta para CEP inexistente.
 
 - **Validações Personalizadas:**
@@ -127,7 +131,9 @@ Diego Santos
 A user registration application developed with the Spring ecosystem (Spring Boot, Spring Data JPA, Spring Security), integrating ZIP code lookup via [ViaCEP](https://viacep.com.br) and validating critical fields (CPF, email, password). Allows you to create, query, list, update user data and automatically fetch address data by ZIP code.
 
 ![Post user](assets/captura22.png)
+
 Caption: Create user via the user registration endpoint.
+
 ## Architecture & Organization
 The project follows a layered architecture with clearly divided, modular responsibilities:
 ``` 
@@ -172,20 +178,24 @@ src/main/java/com/diegobrsantosdev/user_registration_application
 | GET | `/api/v1/cep/{cep}` | Lookup address by ZIP code |
 
 ![Swagger](assets/captura21.png)
+
 Caption: Interactive API documentation with Swagger UI.
 
 ## Key Features
 - **Password Encryption:**
 User passwords are protected through encryption using robust hash algorithms provided by Spring Security, via the implementation. This ensures that no password is stored in plain text in the database, making unauthorized access much more difficult, even in case of a data leak. During authentication or password updates, all comparisons and updates happen securely, following industry best practices for sensitive information protection. `PasswordEncoder`
 
-![Database h2](assets/Captura25.png)
+![Database h2](assets/captura25.png)
+
 Caption: Visualization of the in-memory database (H2).
 
 - **ViaCEP Integration:**
 Automatic address lookup using the public API.
 
 ![Search by cep](assets/captura18.png)      ![Incorrect search by cep](assets/captura19.png)
+
 Caption: Left: valid ZIP code query; Right: response for nonexistent ZIP code.
+
 - **Custom Validations:**
 Unique and valid CPF, unique email, standardized error messages.
 - **Pagination and Filters:**
