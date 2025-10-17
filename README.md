@@ -56,11 +56,13 @@ Legenda: Documentação interativa da API com Swagger UI.
 ##  Funcionalidades em Destaque
 - **Criptografia de Senhas:**
 As senhas dos usuários são protegidas através de criptografia utilizando algoritmos de hash robustos fornecidos pelo Spring Security, via implementação do . Isso garante que nenhuma senha seja armazenada em texto puro no banco de dados, dificultando acessos não autorizados, mesmo em caso de vazamento de dados. Durante o processo de autenticação e alteração de senha, todas as comparações e atualizações são realizadas de forma segura, seguindo as melhores práticas do mercado para proteção de informações sensíveis. `PasswordEncoder`
-![Banco de dados h2](assets/Captura15.png)
+
+![Banco de dados h2](assets/Captura25.png)
 Legenda: Visualização do banco de dados em memória (H2).
 
 - **Integração ViaCEP:**
 Busca automática de informações de endereço via API pública.
+
 ![Consulta por cep](assets/captura18.png)      ![Consulta por cep incorreta](assets/captura19.png)
 Legenda: À esquerda, consulta de CEP válida; à direita, resposta para CEP inexistente.
 
@@ -176,7 +178,7 @@ Caption: Interactive API documentation with Swagger UI.
 - **Password Encryption:**
 User passwords are protected through encryption using robust hash algorithms provided by Spring Security, via the implementation. This ensures that no password is stored in plain text in the database, making unauthorized access much more difficult, even in case of a data leak. During authentication or password updates, all comparisons and updates happen securely, following industry best practices for sensitive information protection. `PasswordEncoder`
 
-![Database h2](assets/Captura15.png)
+![Database h2](assets/Captura25.png)
 Caption: Visualization of the in-memory database (H2).
 
 - **ViaCEP Integration:**
