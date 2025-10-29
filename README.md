@@ -3,7 +3,7 @@
 Aplicação de cadastro de usuários desenvolvida com o ecossistema Spring (Spring Boot, Spring Data JPA, Spring Security), integrando consulta de CEP via [ViaCEP](https://viacep.com.br) e validando campos críticos (CPF, email, senha).
 Permite criar, consultar, listar, atualizar dados de usuários e consultar endereço por CEP de forma automatizada.
 
-![Postar usuário](https://github.com/diegobrsantosdev/user-registration-application/blob/main/assets/captura22.png?raw=true)
+![Postar usuário](https://raw.githubusercontent.com/diegobrsantosdev/user-registration-application/main/assets/captura22.png)
 
 Legenda: Cadastro pelo endpoint de criação de usuário.
 
