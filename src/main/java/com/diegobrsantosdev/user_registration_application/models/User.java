@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -33,6 +34,9 @@ public class User {
     @Column(name = "cpf", unique = true, nullable = false, length = 11)
     private String cpf;
 
+    @Column(name = "rg",unique = true, nullable = false)
+    private String rg;
+
     @Column(name = "phone", nullable = false, length = 15)
     private String phone;
 
@@ -56,6 +60,19 @@ public class User {
 
     @Column(name = "zip_code", nullable = false, length = 8)
     private String zipCode;
+
+    @Column(name = "gender",nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @Column(name = "date_of_birth", nullable = false)
+    private LocalDate dateOfBirth;
+
+    @Column(name = "profile_picture_url")
+    private String profilePictureUrl;
+
+    @Column(name = "terms_accepted")
+    private Boolean termsAccepted;
 
     @Column(name = "created_at")
     @CreationTimestamp

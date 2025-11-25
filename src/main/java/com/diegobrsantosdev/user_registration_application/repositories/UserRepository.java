@@ -15,6 +15,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     boolean existsByCpf(String cpf);
     boolean existsByEmail(String email);
+    boolean existsByRg(String rg);
 
     @Transactional
     void deleteById(Integer id);

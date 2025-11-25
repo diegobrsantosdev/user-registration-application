@@ -133,4 +133,9 @@ public class UserService {
     public boolean existsByCpf(String cpf) {
         return userRepository.existsByCpf(cpf);
     }
+
+    public boolean existsByRg(String rg) {
+        return userRepository.existsByRg(rg);
+    }
+
 }

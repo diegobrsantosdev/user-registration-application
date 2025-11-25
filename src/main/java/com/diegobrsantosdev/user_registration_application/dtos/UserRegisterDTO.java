@@ -1,7 +1,10 @@
 package com.diegobrsantosdev.user_registration_application.dtos;
 
+import com.diegobrsantosdev.user_registration_application.models.Gender;
 import com.diegobrsantosdev.user_registration_application.validators.ValidCpf;
 import jakarta.validation.constraints.*;
+
+import java.time.LocalDate;
 
 public record UserRegisterDTO(
     @NotBlank(message = "Name is required")
@@ -20,6 +23,9 @@ public record UserRegisterDTO(
     @Pattern(regexp = "\\d{11}", message = "CPF must contain only digits")
     @ValidCpf
     String cpf,
+
+    @NotBlank(message = "RG is required")
+    String rg,
 
     @NotBlank(message = "Phone is required")
     @Pattern(regexp = "^\\d{10,11}$", message = "Phone must have 10 or 11 digits (only numbers, including DDD)")
@@ -47,7 +53,20 @@ public record UserRegisterDTO(
 
     @NotBlank(message = "ZIP code is required")
     @Pattern(regexp = "\\d{8}", message = "ZIP code must have 8 digits")
-    String zipCode
+    String zipCode,
+
+    @NotNull(message = "gender is required")
+    Gender gender,
+
+    @NotNull(message = "dateOfBirth is required")
+    LocalDate dateOfBirth,
+
+    String profilePictureUrl,
+
+    @NotNull(message = "Terms acceptance is required")
+    Boolean termsAccepted
+
+
 
 
     //CREATEDAT/UPDATEDAT are automatic

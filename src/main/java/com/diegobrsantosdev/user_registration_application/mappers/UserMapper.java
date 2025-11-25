@@ -15,6 +15,7 @@ public class UserMapper {
                 .name(dto.name())
                 .email(dto.email())
                 .cpf(dto.cpf())
+                .rg(dto.rg())
                 .phone(dto.phone())
                 .address(dto.address())
                 .number(dto.number())
@@ -23,6 +24,10 @@ public class UserMapper {
                 .city(dto.city())
                 .state(dto.state())
                 .zipCode(dto.zipCode())
+                .gender(dto.gender())
+                .dateOfBirth(dto.dateOfBirth())
+                .profilePictureUrl(dto.profilePictureUrl())
+                .termsAccepted(dto.termsAccepted())
                 .build();
 
     }
@@ -31,6 +36,7 @@ public class UserMapper {
         user.setName(dto.name());
         user.setEmail(dto.email());
         user.setCpf(dto.cpf());
+        user.setRg(dto.rg());
         user.setPhone(dto.phone());
         user.setAddress(dto.address());
         user.setNumber(dto.number());
@@ -39,6 +45,10 @@ public class UserMapper {
         user.setCity(dto.city());
         user.setState(dto.state());
         user.setZipCode(dto.zipCode());
+        user.setGender(dto.gender());
+        user.setDateOfBirth(dto.dateOfBirth());
+        user.setProfilePictureUrl(dto.profilePictureUrl());
+        user.setTermsAccepted(dto.termsAccepted());
     }
 
     //password must be set and cryptographed out of mapper
