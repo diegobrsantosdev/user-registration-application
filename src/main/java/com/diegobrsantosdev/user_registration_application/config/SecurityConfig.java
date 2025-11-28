@@ -26,7 +26,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
                                 "/auth/login",
-                                "/auth/register")
+                                "/auth/register",
+                                "/api/v1/cep/**")
                         .permitAll()
 
                         .requestMatchers(

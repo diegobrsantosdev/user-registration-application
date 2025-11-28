@@ -1,6 +1,9 @@
 package com.diegobrsantosdev.user_registration_application.viaCep;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.client.RestTemplate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CepServiceTest {
@@ -9,17 +12,17 @@ class CepServiceTest {
 
     @BeforeEach
     void setup() {
-        cepService = new CepService() {
+        cepService = new CepService(new RestTemplate(), "http://fake-url/") {
             @Override
             public CepResponseDTO lookupCep(String cep) {
-                // Simulate behavior
+
                 if (cep == null || !cep.matches("^[0-9]{8}$")) {
                     throw new IllegalArgumentException("Invalid CEP format. Use only 8 numeric digits.");
                 }
                 if (cep.equals("99999999")) {
                     throw new CepNotFoundException(cep);
                 }
-                // returns a response for valid CEP
+
                 return new CepResponseDTO(
                         cep,
                         "Street",

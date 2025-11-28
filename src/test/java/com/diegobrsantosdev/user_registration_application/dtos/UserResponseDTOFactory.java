@@ -1,22 +1,30 @@
 package com.diegobrsantosdev.user_registration_application.dtos;
 
+import com.diegobrsantosdev.user_registration_application.models.Gender;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class UserResponseDTOFactory {
     public static UserResponseDTO sample() {
         return new UserResponseDTO(
                 1,
-                "Name",
-                "email@email.com",
+                "João Silva",
+                "joao@email.com",
                 "12345678901",
-                "81999999999",
-                "Rua Teste",
-                "123",
-                "Apto 101",
+                "12345678",
+                "11999998888",
+                "Rua Alpha",
+                "100",
+                "Apto 12",
                 "Centro",
-                "Recife",
-                "PE",
-                "50000000",
+                "São Paulo",
+                "SP",
+                "01001000",
+                Gender.MALE,
+                LocalDate.of(1990, 5, 15),
+                null,
+                true,
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );
@@ -33,14 +41,19 @@ public class UserResponseDTOFactory {
                 name,
                 email,
                 cpf,
-                "81999999999",
-                "Rua Teste",
-                "123",
-                "Apto 101",
+                "12345678",
+                "11999998888",
+                "Rua Alpha",
+                "100",
+                "Apto 12",
                 "Centro",
-                "Recife",
-                "PE",
-                "50000000",
+                "São Paulo",
+                "SP",
+                "01001000",
+                Gender.MALE,
+                LocalDate.of(1990, 5, 15),
+                null,
+                true,
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );
