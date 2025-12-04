@@ -1,9 +1,11 @@
 package com.diegobrsantosdev.user_registration_application.dtos;
 
 import com.diegobrsantosdev.user_registration_application.models.Gender;
+import com.diegobrsantosdev.user_registration_application.models.Role;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 public class UserResponseDTOFactory {
     public static UserResponseDTO sample() {
@@ -26,7 +28,8 @@ public class UserResponseDTOFactory {
                 null,
                 true,
                 LocalDateTime.now(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                Set.of(Role.USER)
         );
     }
 
@@ -55,7 +58,8 @@ public class UserResponseDTOFactory {
                 null,
                 true,
                 LocalDateTime.now(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                Set.of(Role.USER)
         );
     }
 }

@@ -1,10 +1,12 @@
 package com.diegobrsantosdev.user_registration_application.dtos;
 
 import com.diegobrsantosdev.user_registration_application.models.Gender;
+import com.diegobrsantosdev.user_registration_application.models.Role;
 import com.diegobrsantosdev.user_registration_application.models.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 public record UserResponseDTO(
     Integer id,
@@ -25,7 +27,9 @@ public record UserResponseDTO(
     String profilePictureUrl,
     Boolean termsAccepted,
     LocalDateTime createdAt,
-    LocalDateTime updatedAt
+    LocalDateTime updatedAt,
+    Set<Role> roles
+
 
 ) {
     public static UserResponseDTO fromEntity(User user) {
@@ -49,7 +53,9 @@ public record UserResponseDTO(
                 user.getProfilePictureUrl(),
                 user.getTermsAccepted(),
                 user.getCreatedAt(),
-                user.getUpdatedAt()
+                user.getUpdatedAt(),
+                user.getRoles()
+
         );
     }
 }

@@ -1,6 +1,7 @@
 package com.diegobrsantosdev.user_registration_application.config;
 
 import com.diegobrsantosdev.user_registration_application.models.Gender;
+import com.diegobrsantosdev.user_registration_application.models.Role;
 import com.diegobrsantosdev.user_registration_application.models.User;
 import com.diegobrsantosdev.user_registration_application.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 
 @Configuration
@@ -37,6 +39,7 @@ public class TestConfig {
                     .dateOfBirth(LocalDate.of(1990, 5, 15))
                     .termsAccepted(true)
                     .profilePictureUrl(null)
+                    .roles(Set.of(Role.USER))
                     .build()
             );
 
@@ -58,13 +61,14 @@ public class TestConfig {
                     .dateOfBirth(LocalDate.of(1992, 8, 22))
                     .termsAccepted(true)
                     .profilePictureUrl(null)
+                    .roles(Set.of(Role.USER))
                     .build()
             );
 
             userRepository.save(User.builder()
                     .name("Caio Pereira")
                     .email("caiopereiraaa19@gmail.com")
-                    .password(passwordEncoder.encode("rsjssenha4055"))
+                    .password(passwordEncoder.encode("admin1234"))
                     .cpf("48520695490")
                     .rg("11223344")
                     .phone("81987501006")
@@ -79,6 +83,7 @@ public class TestConfig {
                     .dateOfBirth(LocalDate.of(1988, 11, 30))
                     .termsAccepted(true)
                     .profilePictureUrl(null)
+                    .roles(Set.of(Role.ADMIN))
                     .build()
             );
 

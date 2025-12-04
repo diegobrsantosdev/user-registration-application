@@ -4,6 +4,7 @@ import com.diegobrsantosdev.user_registration_application.dtos.PasswordDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.UserRegisterDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.UserResponseDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.UserUpdateDTO;
+import com.diegobrsantosdev.user_registration_application.models.Role;
 import com.diegobrsantosdev.user_registration_application.models.User;
 import com.diegobrsantosdev.user_registration_application.exceptions.*;
 import com.diegobrsantosdev.user_registration_application.mappers.UserMapper;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +44,8 @@ public class UserService {
 
         User user = userMapper.toEntity(dto);
         user.setPassword(passwordEncoder.encode(dto.password()));
+
+        user.setRoles(Set.of(Role.USER));
 
         User savedUser = userRepository.save(user);
         return UserResponseDTO.fromEntity(savedUser);

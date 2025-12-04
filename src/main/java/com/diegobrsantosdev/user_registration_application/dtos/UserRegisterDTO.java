@@ -1,6 +1,7 @@
 package com.diegobrsantosdev.user_registration_application.dtos;
 
 import com.diegobrsantosdev.user_registration_application.models.Gender;
+import com.diegobrsantosdev.user_registration_application.models.Role;
 import com.diegobrsantosdev.user_registration_application.validators.ValidCpf;
 import jakarta.validation.constraints.*;
 
