@@ -40,6 +40,8 @@ public class TestConfig {
                     .termsAccepted(true)
                     .profilePictureUrl(null)
                     .roles(Set.of(Role.USER))
+                    .twoFactorEnabled(false)
+                    .twoFactorSecret(null)
                     .build()
             );
 
@@ -62,6 +64,8 @@ public class TestConfig {
                     .termsAccepted(true)
                     .profilePictureUrl(null)
                     .roles(Set.of(Role.USER))
+                    .twoFactorEnabled(false)
+                    .twoFactorSecret(null)
                     .build()
             );
 
@@ -84,6 +88,8 @@ public class TestConfig {
                     .termsAccepted(true)
                     .profilePictureUrl(null)
                     .roles(Set.of(Role.ADMIN))
+                    .twoFactorEnabled(false)
+                    .twoFactorSecret(null)
                     .build()
             );
 

@@ -90,5 +90,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
+    @Column(name = "two_factor_enabled")
+    private Boolean twoFactorEnabled = false;
+
+    @Column(name = "two_factor_secret")
+    private String twoFactorSecret;
+
+
+
 
 }

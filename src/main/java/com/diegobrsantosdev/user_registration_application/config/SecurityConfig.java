@@ -1,6 +1,9 @@
 package com.diegobrsantosdev.user_registration_application.config;
 
+import com.diegobrsantosdev.user_registration_application.security.JwtAuthenticationFilter;
+import com.diegobrsantosdev.user_registration_application.security.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,14 +17,13 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    private final JwtUtil jwtUtil;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -35,6 +37,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/auth/login",
                                 "/auth/register",
+                                "/auth/2fa/login/2fa",
+                                "/auth/2fa/verify",
                                 "/api/v1/cep/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
@@ -44,6 +48,9 @@ public class SecurityConfig {
 
                         // Admin routes
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+
+                        // Authenticated user or admin
+                        .requestMatchers("/api/v1/users/**").hasAnyRole("USER", "ADMIN")
 
                         // Any other route requires authentication
                         .anyRequest().authenticated()
@@ -62,18 +69,25 @@ public class SecurityConfig {
                 // Allow H2 console
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
 
+        // Add JWT filter before UsernamePasswordAuthenticationFilter
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtUtil),
+                UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public UserDetailsService users(PasswordEncoder passwordEncoder) {
         var user = User.builder()
                 .username("admin")
-                .password(passwordEncoder.encode("1234")) // cript with BCrypt
+                .password(passwordEncoder.encode("1234")) // cript com BCrypt
                 .roles("ADMIN")
                 .build();
         return new InMemoryUserDetailsManager(user);
     }
-
 }

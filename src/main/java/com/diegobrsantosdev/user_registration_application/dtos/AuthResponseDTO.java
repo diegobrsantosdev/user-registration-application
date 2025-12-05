@@ -6,10 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class AuthResponseDTO implements Serializable {
-    private String token;
-    private UserResponseDTO user;
-}
+
+public record AuthResponseDTO(
+        String token,
+        boolean twoFactorEnabled,
+        UserResponseDTO user
+) {}

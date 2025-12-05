@@ -28,7 +28,8 @@ public record UserResponseDTO(
     Boolean termsAccepted,
     LocalDateTime createdAt,
     LocalDateTime updatedAt,
-    Set<Role> roles
+    Set<Role> roles,
+    Boolean twoFactorEnable
 
 
 ) {
@@ -54,7 +55,8 @@ public record UserResponseDTO(
                 user.getTermsAccepted(),
                 user.getCreatedAt(),
                 user.getUpdatedAt(),
-                user.getRoles()
+                user.getRoles(),
+                user.getTwoFactorEnabled()
 
         );
     }

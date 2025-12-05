@@ -32,7 +32,11 @@ public class AuthService {
 
         String token = jwtUtil.generateToken(user.getEmail());
 
-        return new AuthResponseDTO(token, UserResponseDTO.fromEntity(user));
+        return new AuthResponseDTO(
+                token,
+                user.getTwoFactorEnabled(),
+                UserResponseDTO.fromEntity(user)
+        );
     }
 
 
@@ -80,10 +84,18 @@ public class AuthService {
         user.setProfilePictureUrl(request.profilePictureUrl());
         user.setTermsAccepted(request.termsAccepted());
 
-        user = userService.save(user);
-        String token = jwtUtil.generateToken(user.getEmail());
-        return new AuthResponseDTO(token, UserResponseDTO.fromEntity(user));
-    }
+        user.setTwoFactorEnabled(false);
+        user.setTwoFactorSecret(null);
 
+        user = userService.save(user);
+
+        String token = jwtUtil.generateToken(user.getEmail());
+
+        return new AuthResponseDTO(
+                token,
+                user.getTwoFactorEnabled(), // ou user.isTwoFactorEnabled()
+                UserResponseDTO.fromEntity(user)
+        );
+    }
 
 }
