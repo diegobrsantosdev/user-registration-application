@@ -29,7 +29,8 @@ public class UserResponseDTOFactory {
                 true,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                Set.of(Role.USER)
+                Set.of(Role.USER),
+                false
         );
     }
 
@@ -59,7 +60,8 @@ public class UserResponseDTOFactory {
                 true,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                Set.of(Role.USER)
+                Set.of(Role.USER),
+                false
         );
     }
 }

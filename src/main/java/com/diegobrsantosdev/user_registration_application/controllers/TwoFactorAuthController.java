@@ -1,6 +1,5 @@
 package com.diegobrsantosdev.user_registration_application.controllers;
 
-import com.diegobrsantosdev.user_registration_application.dtos.Login2faResponseDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.TwoFactorSetupResponseDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.TwoFactorVerifyRequestDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.TwoFactorVerifyResponseDTO;

@@ -35,11 +35,11 @@ public class UserService {
     @Transactional
     public UserResponseDTO registerUser(UserRegisterDTO dto) {
         if (userRepository.findByCpf(dto.cpf()).isPresent()) {
-            throw new DuplicateCpfException("There is already a user with this CPF");
+            throw new DuplicateCpfException("CPF already registered");
         }
 
         if (userRepository.findByEmail(dto.email()).isPresent()) {
-            throw new DuplicateEmailException("There is already a user with this email");
+            throw new DuplicateEmailException("Email already registered");
         }
 
         User user = userMapper.toEntity(dto);

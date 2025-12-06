@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -83,6 +84,7 @@ class AuthControllerTest {
 
         AuthResponseDTO response = new AuthResponseDTO(
                 JWT_TOKEN,
+                false,
                 UserResponseDTO.fromEntity(user)
         );
 

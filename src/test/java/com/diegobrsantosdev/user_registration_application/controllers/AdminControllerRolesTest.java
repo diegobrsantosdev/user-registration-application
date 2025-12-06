@@ -4,6 +4,7 @@ import com.diegobrsantosdev.user_registration_application.config.SecurityConfig;
 import com.diegobrsantosdev.user_registration_application.dtos.UserResponseDTO;
 import com.diegobrsantosdev.user_registration_application.models.Gender;
 import com.diegobrsantosdev.user_registration_application.models.Role;
+import com.diegobrsantosdev.user_registration_application.security.JwtUtil;
 import com.diegobrsantosdev.user_registration_application.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ class AdminControllerRolesTest {
     @MockitoBean
     private UserService userService;
 
+    @MockitoBean
+    private JwtUtil jwtUtil;
+
     // Users for testing (from your TestConfig)
     private static final UserResponseDTO USER_1 = new UserResponseDTO(
             1,
@@ -56,7 +60,8 @@ class AdminControllerRolesTest {
             true,
             null,
             null,
-            Set.of(Role.USER)
+            Set.of(Role.USER),
+            false
     );
 
 
@@ -80,7 +85,8 @@ class AdminControllerRolesTest {
             true,
             null,
             null,
-            Set.of(Role.ADMIN)
+            Set.of(Role.ADMIN),
+            false
     );
 
 

@@ -104,6 +104,7 @@ class AuthControllerRegisterTest {
 
         AuthResponseDTO response = new AuthResponseDTO(
                 JWT_TOKEN,
+                false,
                 UserResponseDTO.fromEntity(user)
         );
 

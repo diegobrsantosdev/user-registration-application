@@ -5,7 +5,9 @@ import com.diegobrsantosdev.user_registration_application.exceptions.DuplicateCp
 import com.diegobrsantosdev.user_registration_application.exceptions.DuplicateEmailException;
 import com.diegobrsantosdev.user_registration_application.exceptions.ResourceNotFoundException;
 import com.diegobrsantosdev.user_registration_application.models.Gender;
+import com.diegobrsantosdev.user_registration_application.security.JwtUtil;
 import com.diegobrsantosdev.user_registration_application.services.AuthService;
+import com.diegobrsantosdev.user_registration_application.services.TwoFactorAuthService;
 import com.diegobrsantosdev.user_registration_application.services.UserService;
 import com.diegobrsantosdev.user_registration_application.viaCep.CepController;
 import com.diegobrsantosdev.user_registration_application.viaCep.CepService;
@@ -62,6 +64,12 @@ class UserControllerTest {
 
     @MockitoBean
     private AuthService authService;
+
+    @MockitoBean
+    private JwtUtil jwtUtil;
+
+    @MockitoBean
+    private TwoFactorAuthService twoFactorAuthService;
 
 
     //GET BY ID
