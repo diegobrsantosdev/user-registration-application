@@ -142,4 +142,7 @@ public class UserService {
         return userRepository.existsByRg(rg);
     }
 
+    public User findById(Integer id) {
+        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    }
 }

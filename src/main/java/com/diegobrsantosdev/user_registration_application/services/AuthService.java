@@ -6,6 +6,7 @@ import com.diegobrsantosdev.user_registration_application.dtos.UserRegisterDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.UserResponseDTO;
 import com.diegobrsantosdev.user_registration_application.exceptions.InvalidCredentialsException;
 import com.diegobrsantosdev.user_registration_application.exceptions.InvalidDataException;
+import com.diegobrsantosdev.user_registration_application.models.Role;
 import com.diegobrsantosdev.user_registration_application.models.User;
 import com.diegobrsantosdev.user_registration_application.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +24,6 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-
     public AuthResponseDTO login(LoginRequestDTO request) {
         User user = userService.findByEmail(request.getEmail());
 
@@ -30,17 +31,33 @@ public class AuthService {
             throw new InvalidCredentialsException("Invalid email or password.");
         }
 
-        String token = jwtUtil.generateToken(user.getEmail());
+        if (user.getTwoFactorEnabled()) {
+            return new AuthResponseDTO(
+                    null,
+                    true,
+                    true,
+                    UserResponseDTO.fromEntity(user)
+            );
+        }
+
+        String token = jwtUtil.generateToken(
+                user.getEmail(),
+                user.getRoles()
+                        .stream()
+                        .map(role -> "ROLE_" + role.name())
+                        .toList()
+        );
 
         return new AuthResponseDTO(
                 token,
-                user.getTwoFactorEnabled(),
+                false,
+                false,
                 UserResponseDTO.fromEntity(user)
         );
     }
 
-
     public AuthResponseDTO register(UserRegisterDTO request) {
+
         if (userService.existsByEmail(request.email())) {
             throw new InvalidCredentialsException("Email already in use.");
         }
@@ -50,6 +67,7 @@ public class AuthService {
         if (userService.existsByRg(request.rg())) {
             throw new InvalidCredentialsException("RG already in use.");
         }
+
         if (request.gender() == null) {
             throw new InvalidDataException("Gender is required.");
         }
@@ -57,6 +75,7 @@ public class AuthService {
         if (request.dateOfBirth() == null) {
             throw new InvalidDataException("Date of birth is required.");
         }
+
         if (request.dateOfBirth().isAfter(LocalDate.now())) {
             throw new InvalidDataException("Date of birth cannot be in the future.");
         }
@@ -69,7 +88,7 @@ public class AuthService {
         user.setName(request.name());
         user.setEmail(request.email());
         user.setPassword(passwordEncoder.encode(request.password()));
-        user.setCpf(request.cpf()); //record doest have the password
+        user.setCpf(request.cpf());
         user.setRg(request.rg());
         user.setPhone(request.phone());
         user.setAddress(request.address());
@@ -87,15 +106,23 @@ public class AuthService {
         user.setTwoFactorEnabled(false);
         user.setTwoFactorSecret(null);
 
+        user.setRoles(Set.of(Role.USER));
+
         user = userService.save(user);
 
-        String token = jwtUtil.generateToken(user.getEmail());
+        String token = jwtUtil.generateToken(
+                user.getEmail(),
+                user.getRoles()
+                        .stream()
+                        .map(role -> "ROLE_" + role.name())
+                        .toList()
+        );
 
         return new AuthResponseDTO(
                 token,
-                user.getTwoFactorEnabled(), // ou user.isTwoFactorEnabled()
+                false,
+                false,
                 UserResponseDTO.fromEntity(user)
         );
     }
-
 }

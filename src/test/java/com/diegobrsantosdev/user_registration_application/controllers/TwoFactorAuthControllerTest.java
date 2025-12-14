@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class TwoFactorAuthControllerTest {
 
     private static final String EMAIL = "user@email.com";
-    private static final int VALID_CODE = 123456;
+    private static final String VALID_CODE = "123456";
     private static final String SECRET = "JBSWY3DPEHPK3PXP";
     private static final String QR_CODE = "data:image/png;base64,AAAA...";
     private static final String TOKEN = "FAKE_2FA_JWT";

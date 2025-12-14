@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class TwoFactorAuthService {
@@ -46,8 +48,32 @@ public class TwoFactorAuthService {
         user.setTwoFactorEnabled(true);
         userRepository.save(user);
 
-        String token = jwtUtil.generateToken(user.getEmail());
+        List<String> roles = user.getRoles().stream()
+                .map(role -> "ROLE_" + role.name())
+                .toList();
+
+        String token = jwtUtil.generateToken(user.getEmail(), roles);
         return new TwoFactorVerifyResponseDTO("2FA activated successfully!", token);
+    }
+
+    public String loginWith2FA(TwoFactorVerifyRequestDTO request) {
+        User user = userRepository.findByEmail(request.email())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (!user.getTwoFactorEnabled()) {
+            throw new InvalidDataException("This user does not have 2FA enabled.");
+        }
+
+        boolean valid = topService.validateCode(user.getTwoFactorSecret(), request.code());
+        if (!valid) {
+            throw new InvalidDataException("Invalid 2FA code");
+        }
+
+        List<String> roles = user.getRoles().stream()
+                .map(role -> "ROLE_" + role.name())
+                .toList();
+
+        return jwtUtil.generateToken(user.getEmail(), roles);
     }
 
 }

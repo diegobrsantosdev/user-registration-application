@@ -5,6 +5,7 @@ import com.diegobrsantosdev.user_registration_application.dtos.UserRegisterDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.UserResponseDTO;
 import com.diegobrsantosdev.user_registration_application.exceptions.InvalidCredentialsException;
 import com.diegobrsantosdev.user_registration_application.models.Gender;
+import com.diegobrsantosdev.user_registration_application.models.Role;
 import com.diegobrsantosdev.user_registration_application.models.User;
 import com.diegobrsantosdev.user_registration_application.security.JwtUtil;
 import com.diegobrsantosdev.user_registration_application.services.AuthService;
@@ -21,6 +22,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Set;
 
 
 @WebMvcTest(AuthController.class)
@@ -100,10 +103,16 @@ class AuthControllerRegisterTest {
                 .dateOfBirth(DOB)
                 .termsAccepted(true)
                 .profilePictureUrl(null)
+
+                .roles(Set.of(Role.USER))
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .twoFactorEnabled(false)
                 .build();
 
         AuthResponseDTO response = new AuthResponseDTO(
                 JWT_TOKEN,
+                false,
                 false,
                 UserResponseDTO.fromEntity(user)
         );

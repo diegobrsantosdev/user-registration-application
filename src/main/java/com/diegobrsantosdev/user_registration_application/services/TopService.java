@@ -33,8 +33,8 @@ public class TopService {
     }
 
     // validate TOTP code
-    public boolean validateCode(String secret, int code) {
-        return verifier.isValidCode(secret, String.valueOf(code));
+    public boolean validateCode(String secret, String code) {
+        return verifier.isValidCode(secret, code);
     }
 
     // generate otpauth URI

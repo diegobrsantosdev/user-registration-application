@@ -29,7 +29,7 @@ public record UserResponseDTO(
     LocalDateTime createdAt,
     LocalDateTime updatedAt,
     Set<Role> roles,
-    Boolean twoFactorEnable
+    Boolean twoFactorEnabled
 
 
 ) {

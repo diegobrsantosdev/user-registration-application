@@ -4,10 +4,13 @@ import com.diegobrsantosdev.user_registration_application.config.SecurityConfig;
 import com.diegobrsantosdev.user_registration_application.dtos.UserResponseDTO;
 import com.diegobrsantosdev.user_registration_application.models.Gender;
 import com.diegobrsantosdev.user_registration_application.models.Role;
+import com.diegobrsantosdev.user_registration_application.models.User;
 import com.diegobrsantosdev.user_registration_application.security.JwtUtil;
 import com.diegobrsantosdev.user_registration_application.services.UserService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -23,6 +26,7 @@ import java.util.Set;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AdminController.class)
@@ -128,5 +132,41 @@ class AdminControllerRolesTest {
                 .andExpect(jsonPath("$[1].id").value(ADMIN_1.id()));
     }
 
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void adminShouldPromoteUserToAdmin() throws Exception {
+
+        User user = User.builder()
+                .id(1)
+                .roles(Set.of(Role.USER))
+                .build();
+
+        User promotedUser = User.builder()
+                .id(1)
+                .roles(Set.of(Role.ADMIN))
+                .build();
+
+        Mockito.when(userService.findById(1)).thenReturn(user);
+        Mockito.when(userService.save(any(User.class))).thenReturn(promotedUser);
+
+        mockMvc.perform(put("/admin/1/promote"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.roles[0]").value("ADMIN"));
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"USER"})
+    void userShouldNotPromoteUser() throws Exception {
+
+        mockMvc.perform(put("/admin/1/promote"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void unauthenticatedUserShouldNotPromoteUser() throws Exception {
+
+        mockMvc.perform(put("/admin/1/promote"))
+                .andExpect(status().isUnauthorized());
+    }
 
 }

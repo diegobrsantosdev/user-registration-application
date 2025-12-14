@@ -20,6 +20,7 @@ public class AuthController {
 
     private final AuthService authService;
 
+    //Without 2FA
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO request) {
         AuthResponseDTO response = authService.login(request);

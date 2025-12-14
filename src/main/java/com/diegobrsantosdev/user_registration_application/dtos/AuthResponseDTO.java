@@ -10,5 +10,6 @@ import java.io.Serializable;
 public record AuthResponseDTO(
         String token,
         boolean twoFactorEnabled,
+        boolean requires2FA,
         UserResponseDTO user
 ) {}

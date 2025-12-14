@@ -1,5 +1,6 @@
 package com.diegobrsantosdev.user_registration_application.controllers;
 
+import com.diegobrsantosdev.user_registration_application.dtos.Login2faResponseDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.TwoFactorSetupResponseDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.TwoFactorVerifyRequestDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.TwoFactorVerifyResponseDTO;
@@ -19,6 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class TwoFactorAuthController {
 
     private final TwoFactorAuthService twoFactorAuthService;
+
+    @PostMapping("/login")
+    public ResponseEntity<Login2faResponseDTO> loginWith2FA(@RequestBody TwoFactorVerifyRequestDTO request) {
+        String token = twoFactorAuthService.loginWith2FA(request);
+        return ResponseEntity.ok(new Login2faResponseDTO(token));
+    }
 
     // Step 2: Setup 2FA (requires user to be logged in)
     @PostMapping("/setup")
