@@ -9,6 +9,7 @@ import com.diegobrsantosdev.user_registration_application.models.User;
 import com.diegobrsantosdev.user_registration_application.exceptions.*;
 import com.diegobrsantosdev.user_registration_application.mappers.UserMapper;
 import com.diegobrsantosdev.user_registration_application.repositories.UserRepository;
+import com.diegobrsantosdev.user_registration_application.shared.ApiMessages;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -104,6 +106,20 @@ public class UserService {
 
         user.setPassword(passwordEncoder.encode(dto.newPassword()));
         userRepository.saveAndFlush(user);
+    }
+
+    @Transactional
+    public User promoteToAdmin(Integer id) {
+        User user = findById(id);
+
+        if (user.getRoles().contains(Role.ADMIN)) {
+            throw new InvalidDataException(ApiMessages.USER_ALREADY_ADMIN);
+        }
+
+        Set<Role> roles = new HashSet<>(user.getRoles());
+        roles.add(Role.ADMIN);
+        user.setRoles(roles);
+        return save(user);
     }
 
     // ========= DELETE =========

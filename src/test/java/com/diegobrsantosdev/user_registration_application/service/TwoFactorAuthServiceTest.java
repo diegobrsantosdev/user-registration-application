@@ -3,6 +3,7 @@ package com.diegobrsantosdev.user_registration_application.service;
 import com.diegobrsantosdev.user_registration_application.dtos.*;
 import com.diegobrsantosdev.user_registration_application.exceptions.InvalidDataException;
 import com.diegobrsantosdev.user_registration_application.exceptions.UsernameNotFoundException;
+import com.diegobrsantosdev.user_registration_application.models.Role;
 import com.diegobrsantosdev.user_registration_application.models.User;
 import com.diegobrsantosdev.user_registration_application.repositories.UserRepository;
 import com.diegobrsantosdev.user_registration_application.security.JwtUtil;
@@ -17,7 +18,9 @@ import org.springframework.security.core.Authentication;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 
+
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -50,6 +53,7 @@ public class TwoFactorAuthServiceTest {
     private User createDefaultUser() {
         User user = new User();
         user.setEmail(DEFAULT_EMAIL);
+        user.setRoles(Set.of(Role.USER));
         return user;
     }
 
@@ -87,27 +91,25 @@ public class TwoFactorAuthServiceTest {
 
     // ========= VERIFY 2FA =========
     @Test
-    void verify2FA_ShouldActivate2FAAndReturnToken_WhenCodeIsValid() {
+    void loginWith2FA_ShouldReturnToken_WhenValid() {
         User user = createDefaultUser();
+        user.setTwoFactorEnabled(true);
         user.setTwoFactorSecret(SECRET);
 
         TwoFactorVerifyRequestDTO request = createDefaultVerifyRequest();
 
         when(userRepository.findByEmail(DEFAULT_EMAIL)).thenReturn(Optional.of(user));
         when(topService.validateCode(SECRET, VALID_CODE)).thenReturn(true);
-        when(userRepository.save(user)).thenReturn(user);
         when(jwtUtil.generateToken(
                 eq(DEFAULT_EMAIL),
                 anyList()
         )).thenReturn(JWT_TOKEN);
 
-        TwoFactorVerifyResponseDTO response = twoFactorAuthService.verify2FA(request);
+        String token = twoFactorAuthService.loginWith2FA(request);
 
-        assertTrue(user.getTwoFactorEnabled());
-        assertEquals("2FA activated successfully!", response.message());
-        assertEquals(JWT_TOKEN, response.token());
-        verify(userRepository).save(user);
+        assertEquals(JWT_TOKEN, token);
     }
+
 
     @Test
     void verify2FA_ShouldThrowInvalidDataException_WhenCodeIsInvalid() {
@@ -136,23 +138,28 @@ public class TwoFactorAuthServiceTest {
 
     // ========= LOGIN WITH 2FA =========
     @Test
-    void loginWith2FA_ShouldReturnToken_WhenValid() {
+    void verify2FA_ShouldActivate2FAAndReturnToken_WhenCodeIsValid() {
         User user = createDefaultUser();
-        user.setTwoFactorEnabled(true);
         user.setTwoFactorSecret(SECRET);
+        user.setTwoFactorEnabled(false);
 
         TwoFactorVerifyRequestDTO request = createDefaultVerifyRequest();
 
         when(userRepository.findByEmail(DEFAULT_EMAIL)).thenReturn(Optional.of(user));
         when(topService.validateCode(SECRET, VALID_CODE)).thenReturn(true);
+        when(userRepository.save(user)).thenReturn(user);
         when(jwtUtil.generateToken(
                 eq(DEFAULT_EMAIL),
                 anyList()
         )).thenReturn(JWT_TOKEN);
 
-        String token = twoFactorAuthService.loginWith2FA(request);
+        TwoFactorVerifyResponseDTO response = twoFactorAuthService.verify2FA(request);
 
-        assertEquals(JWT_TOKEN, token);
+        assertTrue(user.getTwoFactorEnabled());
+        assertEquals("2FA activated successfully!", response.message());
+        assertEquals(JWT_TOKEN, response.token());
+
+        verify(userRepository).save(user);
     }
 
     @Test

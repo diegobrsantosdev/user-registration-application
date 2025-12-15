@@ -9,7 +9,7 @@ import com.diegobrsantosdev.user_registration_application.security.JwtUtil;
 import com.diegobrsantosdev.user_registration_application.services.AuthService;
 import com.diegobrsantosdev.user_registration_application.services.TwoFactorAuthService;
 import com.diegobrsantosdev.user_registration_application.services.UserService;
-import com.diegobrsantosdev.user_registration_application.viaCep.CepController;
+import com.diegobrsantosdev.user_registration_application.shared.ApiMessages;
 import com.diegobrsantosdev.user_registration_application.viaCep.CepService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -311,7 +311,8 @@ class UserControllerTest {
         mockMvc.perform(put("/api/v1/users/" + USER_ID + "/password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(req)))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value(ApiMessages.PASSWORD_UPDATED));
     }
 
 

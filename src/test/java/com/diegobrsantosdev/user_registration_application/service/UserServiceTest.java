@@ -2,11 +2,13 @@ package com.diegobrsantosdev.user_registration_application.service;
 
 import com.diegobrsantosdev.user_registration_application.dtos.*;
 import com.diegobrsantosdev.user_registration_application.models.Gender;
+import com.diegobrsantosdev.user_registration_application.models.Role;
 import com.diegobrsantosdev.user_registration_application.models.User;
 import com.diegobrsantosdev.user_registration_application.exceptions.*;
 import com.diegobrsantosdev.user_registration_application.mappers.UserMapper;
 import com.diegobrsantosdev.user_registration_application.repositories.UserRepository;
 import com.diegobrsantosdev.user_registration_application.services.UserService;
+import com.diegobrsantosdev.user_registration_application.shared.ApiMessages;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,6 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -273,5 +277,50 @@ public class UserServiceTest {
     void deleteUser_ShouldThrowResourceNotFoundException_WhenNotExists() {
         when(userRepository.existsById(EXISTING_ID)).thenReturn(false);
         assertThrows(ResourceNotFoundException.class, () -> userService.deleteUser(EXISTING_ID));
+    }
+
+    // ========= PROMOTE TO ADMIN =========
+    @Test
+    void promoteToAdmin_ShouldPromoteUser_WhenUserIsNotAdmin() {
+        User user = new User();
+        user.setId(EXISTING_ID);
+        user.setRoles(Set.of(Role.USER));
+
+        when(userRepository.findById(EXISTING_ID)).thenReturn(Optional.of(user));
+        when(userRepository.save(user)).thenReturn(user);
+
+        User result = userService.promoteToAdmin(EXISTING_ID);
+
+        assertTrue(result.getRoles().contains(Role.ADMIN));
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    void promoteToAdmin_ShouldThrowException_WhenUserIsAlreadyAdmin() {
+        User user = new User();
+        user.setId(EXISTING_ID);
+        user.setRoles(Set.of(Role.ADMIN));
+
+        when(userRepository.findById(EXISTING_ID)).thenReturn(Optional.of(user));
+
+        InvalidDataException ex = assertThrows(
+                InvalidDataException.class,
+                () -> userService.promoteToAdmin(EXISTING_ID)
+        );
+
+        assertEquals(ApiMessages.USER_ALREADY_ADMIN, ex.getMessage());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void promoteToAdmin_ShouldThrowResourceNotFoundException_WhenUserNotFound() {
+        when(userRepository.findById(NON_EXISTENT_ID)).thenReturn(Optional.empty());
+
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> userService.promoteToAdmin(NON_EXISTENT_ID)
+        );
+
+        verify(userRepository, never()).save(any());
     }
 }

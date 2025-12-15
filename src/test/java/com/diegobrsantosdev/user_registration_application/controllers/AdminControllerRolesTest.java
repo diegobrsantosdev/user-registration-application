@@ -7,10 +7,9 @@ import com.diegobrsantosdev.user_registration_application.models.Role;
 import com.diegobrsantosdev.user_registration_application.models.User;
 import com.diegobrsantosdev.user_registration_application.security.JwtUtil;
 import com.diegobrsantosdev.user_registration_application.services.UserService;
+import com.diegobrsantosdev.user_registration_application.shared.ApiMessages;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -136,22 +135,17 @@ class AdminControllerRolesTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void adminShouldPromoteUserToAdmin() throws Exception {
 
-        User user = User.builder()
-                .id(1)
-                .roles(Set.of(Role.USER))
-                .build();
-
         User promotedUser = User.builder()
                 .id(1)
                 .roles(Set.of(Role.ADMIN))
                 .build();
 
-        Mockito.when(userService.findById(1)).thenReturn(user);
-        Mockito.when(userService.save(any(User.class))).thenReturn(promotedUser);
+        when(userService.promoteToAdmin(1)).thenReturn(promotedUser);
 
         mockMvc.perform(put("/admin/1/promote"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.roles[0]").value("ADMIN"));
+                .andExpect(jsonPath("$.message").value(ApiMessages.USER_PROMOTED))
+                .andExpect(jsonPath("$.user.roles[0]").value("ADMIN"));
     }
 
     @Test

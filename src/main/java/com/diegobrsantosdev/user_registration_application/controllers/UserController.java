@@ -1,11 +1,9 @@
 package com.diegobrsantosdev.user_registration_application.controllers;
 
-import com.diegobrsantosdev.user_registration_application.dtos.PasswordDTO;
-import com.diegobrsantosdev.user_registration_application.dtos.UserRegisterDTO;
-import com.diegobrsantosdev.user_registration_application.dtos.UserResponseDTO;
-import com.diegobrsantosdev.user_registration_application.dtos.UserUpdateDTO;
+import com.diegobrsantosdev.user_registration_application.dtos.*;
 import com.diegobrsantosdev.user_registration_application.exceptions.ResourceNotFoundException;
 import com.diegobrsantosdev.user_registration_application.services.UserService;
+import com.diegobrsantosdev.user_registration_application.shared.ApiMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -73,10 +71,15 @@ public class UserController {
     }
 
     @PutMapping("/{id}/password")
-    public ResponseEntity<Void> updatePassword(@PathVariable Integer id,
-                                               @RequestBody @Valid PasswordDTO dto) {
+    public ResponseEntity<PasswordMessageResponseDTO> updatePassword(
+            @PathVariable Integer id,
+            @RequestBody @Valid PasswordDTO dto) {
+
         service.updatePassword(id, dto);
-        return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(
+                new PasswordMessageResponseDTO(ApiMessages.PASSWORD_UPDATED)
+        );
     }
 
     // ========= DELETE =========

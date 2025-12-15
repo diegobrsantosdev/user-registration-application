@@ -7,8 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
-
-
 @Configuration
 public class SwaggerConfig {
     @Bean
@@ -16,15 +14,27 @@ public class SwaggerConfig {
         return new OpenAPI()
             .info(new Info().title("User Registration API")
             .description("""
-API for user registration and management.
+User Registration, Authentication and Management API
 
-Main features:
-- User registration, query, update, deletion, password change, and paginated listing.
+This API provides a complete solution for user registration, authentication, authorization, and management, including role-based access control (RBAC) and Two-Factor Authentication (2FA) for enhanced security.
 
-Notes:
-- Passwords are securely stored (encrypted).
-- Sensitive data is never exposed by the API.
-- Using HTTPS is strongly recommended for all integrations.
+It is designed following best practices for security, scalability, and clean architecture, making it suitable for real-world production environments.
+
+Main Features:
+
+- Authentication & Security
+
+- User registration and login with JWT-based authentication
+
+- Two-Factor Authentication (2FA) using time-based codes (TOTP)
+
+- Secure login flow with conditional 2FA validation
+
+- Passwords securely stored using strong encryption
+
+- JWT tokens include user roles as claims for authorization
+
+- Sensitive data is never exposed through the API
 """
             )
             .version("v1.0"));
