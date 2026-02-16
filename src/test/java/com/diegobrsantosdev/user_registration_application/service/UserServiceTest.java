@@ -266,18 +266,26 @@ public class UserServiceTest {
     // ========= DELETE =========
     @Test
     void deleteUser_ShouldDelete_WhenExists() {
-        when(userRepository.existsById(EXISTING_ID)).thenReturn(true);
+        User mockUser = new User();
+        mockUser.setId(EXISTING_ID); // Coloque o ID igual ao EXISTING_ID, se necessário
+
+        when(userRepository.findById(EXISTING_ID)).thenReturn(Optional.of(mockUser));
 
         userService.deleteUser(EXISTING_ID);
 
-        verify(userRepository).deleteById(EXISTING_ID);
+        verify(userRepository).delete(mockUser);
     }
+
+
+
 
     @Test
     void deleteUser_ShouldThrowResourceNotFoundException_WhenNotExists() {
-        when(userRepository.existsById(EXISTING_ID)).thenReturn(false);
-        assertThrows(ResourceNotFoundException.class, () -> userService.deleteUser(EXISTING_ID));
+        when(userRepository.findById(NON_EXISTENT_ID)).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> userService.deleteUser(NON_EXISTENT_ID));
     }
+
+
 
     // ========= PROMOTE TO ADMIN =========
     @Test

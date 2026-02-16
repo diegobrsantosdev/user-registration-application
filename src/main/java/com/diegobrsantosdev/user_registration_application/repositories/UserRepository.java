@@ -1,5 +1,6 @@
 package com.diegobrsantosdev.user_registration_application.repositories;
 
+import com.diegobrsantosdev.user_registration_application.models.Role;
 import com.diegobrsantosdev.user_registration_application.models.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 
 import java.util.Optional;
+import java.util.Set;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
@@ -19,5 +22,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Transactional
     void deleteById(Integer id);
+
+    long countByRoles(Role role);
+
 
 }

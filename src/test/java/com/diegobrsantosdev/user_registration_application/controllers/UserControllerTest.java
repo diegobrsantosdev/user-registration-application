@@ -1,10 +1,12 @@
 package com.diegobrsantosdev.user_registration_application.controllers;
 
+import com.diegobrsantosdev.user_registration_application.config.UserDetailsImpl;
 import com.diegobrsantosdev.user_registration_application.dtos.*;
 import com.diegobrsantosdev.user_registration_application.exceptions.DuplicateCpfException;
 import com.diegobrsantosdev.user_registration_application.exceptions.DuplicateEmailException;
 import com.diegobrsantosdev.user_registration_application.exceptions.ResourceNotFoundException;
 import com.diegobrsantosdev.user_registration_application.models.Gender;
+import com.diegobrsantosdev.user_registration_application.models.Role;
 import com.diegobrsantosdev.user_registration_application.security.JwtUtil;
 import com.diegobrsantosdev.user_registration_application.services.AuthService;
 import com.diegobrsantosdev.user_registration_application.services.TwoFactorAuthService;
@@ -14,7 +16,6 @@ import com.diegobrsantosdev.user_registration_application.viaCep.CepService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,14 +24,20 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -81,7 +88,7 @@ class UserControllerTest {
                 USER_ID, USER_NAME, USER_EMAIL, USER_CPF
         );
 
-        Mockito.when(userService.getUserById(USER_ID)).thenReturn(user);
+        when(userService.getUserById(USER_ID)).thenReturn(user);
 
         mockMvc.perform(get("/api/v1/users/" + USER_ID))
                 .andExpect(status().isOk())
@@ -101,7 +108,7 @@ class UserControllerTest {
                 USER_ID, USER_NAME, USER_EMAIL, USER_CPF
         );
 
-        Mockito.when(userService.getUserByCpf(USER_CPF))
+        when(userService.getUserByCpf(USER_CPF))
                 .thenReturn(Optional.of(user));
 
         mockMvc.perform(get("/api/v1/users?cpf=" + USER_CPF))
@@ -115,7 +122,7 @@ class UserControllerTest {
     @Test
     @DisplayName("Should return 404 when user not found by ID")
     void shouldReturn404WhenUserNotFoundById() throws Exception {
-        Mockito.when(userService.getUserById(999))
+        when(userService.getUserById(999))
                 .thenThrow(new ResourceNotFoundException(NOT_FOUND_MESSAGE));
 
         mockMvc.perform(get("/api/v1/users/999"))
@@ -126,7 +133,7 @@ class UserControllerTest {
     @Test
     @DisplayName("Should return 404 if user is not found by CPF")
     void shouldReturn404WhenUserNotFoundByCpf() throws Exception {
-        Mockito.when(userService.getUserByCpf(INVALID_CPF)).thenReturn(Optional.empty());
+        when(userService.getUserByCpf(INVALID_CPF)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/api/v1/users?cpf=" + INVALID_CPF))
                 .andExpect(status().isNotFound());
@@ -149,7 +156,7 @@ class UserControllerTest {
                 USER_ID, USER_NAME, USER_EMAIL, USER_CPF
         );
 
-        Mockito.when(userService.listAllUsers(any()))
+        when(userService.listAllUsers(any()))
                 .thenReturn(new PageImpl<>(List.of(user), PageRequest.of(0, 10), 1));
 
         mockMvc.perform(get("/api/v1/users/all"))
@@ -191,7 +198,7 @@ class UserControllerTest {
                 USER_ID, USER_NAME, USER_EMAIL, USER_CPF
         );
 
-        Mockito.when(userService.registerUser(any(UserRegisterDTO.class))).thenReturn(resp);
+        when(userService.registerUser(any(UserRegisterDTO.class))).thenReturn(resp);
 
         mockMvc.perform(post("/api/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -214,7 +221,7 @@ class UserControllerTest {
                 LocalDate.of(1990, 5, 15), null, true
         );
 
-        Mockito.when(userService.registerUser(any(UserRegisterDTO.class)))
+        when(userService.registerUser(any(UserRegisterDTO.class)))
                 .thenThrow(new DuplicateCpfException(DUPLICATE_CPF_MESSAGE));
 
         mockMvc.perform(post("/api/v1/users")
@@ -235,7 +242,7 @@ class UserControllerTest {
                 LocalDate.of(1990, 5, 15), null, true
         );
 
-        Mockito.when(userService.registerUser(any(UserRegisterDTO.class)))
+        when(userService.registerUser(any(UserRegisterDTO.class)))
                 .thenThrow(new DuplicateEmailException(DUPLICATE_EMAIL_MESSAGE));
 
         mockMvc.perform(post("/api/v1/users")
@@ -264,7 +271,7 @@ class UserControllerTest {
                 USER_ID, USER_NAME, USER_EMAIL, USER_CPF
         );
 
-        Mockito.when(userService.updateUser(eq(USER_ID), any(UserUpdateDTO.class)))
+        when(userService.updateUser(eq(USER_ID), any(UserUpdateDTO.class)))
                 .thenReturn(resp);
 
         mockMvc.perform(put("/api/v1/users/" + USER_ID)
@@ -289,7 +296,7 @@ class UserControllerTest {
                 LocalDate.of(1990, 5, 15), null, true
         );
 
-        Mockito.when(userService.updateUser(eq(99), any(UserUpdateDTO.class)))
+        when(userService.updateUser(eq(99), any(UserUpdateDTO.class)))
                 .thenThrow(new ResourceNotFoundException(NOT_FOUND_MESSAGE));
 
         mockMvc.perform(put("/api/v1/users/99")
@@ -319,23 +326,28 @@ class UserControllerTest {
     // DELETE USER
 
     @Test
-    @DisplayName("Should delete user")
-    void shouldDeleteUser() throws Exception {
-        doNothing().when(userService).deleteUser(USER_ID);
+    @DisplayName("Should delete own user")
+    void shouldDeleteOwnUser() throws Exception {
+        UserDetailsImpl currentUser = new UserDetailsImpl(
+                1,
+                "joao",
+                "ignored",
+                Set.of(Role.USER)
+        );
 
-        mockMvc.perform(delete("/api/v1/users/" + USER_ID))
-                .andExpect(status().isNoContent());
+        MessageResponseDTO responseDTO = new MessageResponseDTO(ApiMessages.USER_DELETED);
+        when(userService.deleteOwnUser(currentUser.getId())).thenReturn(responseDTO);
+
+        //Authenticated user
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(currentUser, null, currentUser.getAuthorities())
+        );
+
+        mockMvc.perform(delete("/api/v1/users/me"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value(ApiMessages.USER_DELETED));
+
+        SecurityContextHolder.clearContext();
     }
 
-    @Test
-    @DisplayName("Should return 404 when trying to delete a non-existent user")
-    void shouldReturn404WhenDeletingNonExistentUser() throws Exception {
-        Mockito.doThrow(new ResourceNotFoundException(NOT_FOUND_MESSAGE))
-                .when(userService).deleteUser(99);
-
-        mockMvc.perform(delete("/api/v1/users/99"))
-                .andExpect(status().isNotFound());
-    }
 }
-
-

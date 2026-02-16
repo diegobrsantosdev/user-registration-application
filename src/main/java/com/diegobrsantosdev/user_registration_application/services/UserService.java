@@ -1,9 +1,6 @@
 package com.diegobrsantosdev.user_registration_application.services;
 
-import com.diegobrsantosdev.user_registration_application.dtos.PasswordDTO;
-import com.diegobrsantosdev.user_registration_application.dtos.UserRegisterDTO;
-import com.diegobrsantosdev.user_registration_application.dtos.UserResponseDTO;
-import com.diegobrsantosdev.user_registration_application.dtos.UserUpdateDTO;
+import com.diegobrsantosdev.user_registration_application.dtos.*;
 import com.diegobrsantosdev.user_registration_application.models.Role;
 import com.diegobrsantosdev.user_registration_application.models.User;
 import com.diegobrsantosdev.user_registration_application.exceptions.*;
@@ -84,11 +81,15 @@ public class UserService {
 
         userRepository.findByCpf(dto.cpf())
                 .filter(u -> !u.getId().equals(id))
-                .ifPresent(u -> { throw new ResourceAlreadyExistsException("CPF already registered"); });
+                .ifPresent(u -> {
+                    throw new ResourceAlreadyExistsException("CPF already registered");
+                });
 
         userRepository.findByEmail(dto.email())
                 .filter(u -> !u.getId().equals(id))
-                .ifPresent(u -> { throw new ResourceAlreadyExistsException("Email already registered"); });
+                .ifPresent(u -> {
+                    throw new ResourceAlreadyExistsException("Email already registered");
+                });
 
         userMapper.updateEntityFromDto(user, dto);
         User updated = userRepository.saveAndFlush(user);
@@ -124,12 +125,36 @@ public class UserService {
 
     // ========= DELETE =========
     @Transactional
-    public void deleteUser(Integer id) {
-        if (!userRepository.existsById(id)) {
-            throw new ResourceNotFoundException("User not found");
-        }
-        userRepository.deleteById(id);
+    public MessageResponseDTO deleteOwnUser(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        userRepository.delete(user);
+        return new MessageResponseDTO("Your account has been successfully deleted");
     }
+
+    @Transactional
+    public MessageResponseDTO deleteUserAsAdmin(Integer idToDelete, Integer adminId) {
+        User user = userRepository.findById(idToDelete)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (user.getId().equals(adminId)) {
+            throw new IllegalActionException("You cannot delete yourself");
+        }
+
+        if (user.getRoles().stream().anyMatch(role -> role == Role.ADMIN)
+                && userRepository.countByRoles(Role.ADMIN) == 1) {
+            throw new IllegalActionException("Cannot delete the last admin");
+        }
+
+
+        userRepository.delete(user);
+        return new MessageResponseDTO("User deleted successfully");
+    }
+
+
+    // ========= OTHERS =========
+
 
     private void checkDuplicate(String fieldName, Optional<?> existing) {
         if (existing.isPresent()) {
@@ -161,4 +186,15 @@ public class UserService {
     public User findById(Integer id) {
         return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
+
+    public void deleteUser(Integer id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        userRepository.delete(user);
+    }
+
+    public long countByRoles(Role role) {
+        return userRepository.countByRoles(role);
+    }
+
 }
