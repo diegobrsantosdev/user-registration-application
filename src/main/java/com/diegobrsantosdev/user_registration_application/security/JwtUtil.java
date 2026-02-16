@@ -51,4 +51,8 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
+    public Integer getUserIdFromToken(String token) {
+        return 100;
+    }
 }

@@ -1,5 +1,6 @@
 package com.diegobrsantosdev.user_registration_application.controllers;
 
+import com.diegobrsantosdev.user_registration_application.config.UserDetailsImpl;
 import com.diegobrsantosdev.user_registration_application.dtos.*;
 import com.diegobrsantosdev.user_registration_application.exceptions.ResourceNotFoundException;
 import com.diegobrsantosdev.user_registration_application.services.UserService;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
@@ -83,9 +85,10 @@ public class UserController {
     }
 
     // ========= DELETE =========
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
-        service.deleteUser(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    @DeleteMapping("/me")
+    public ResponseEntity<MessageResponseDTO> deleteOwnUser(
+            @AuthenticationPrincipal UserDetailsImpl currentUser) {
+
+        return ResponseEntity.ok(service.deleteOwnUser(currentUser.getId()));
     }
 }

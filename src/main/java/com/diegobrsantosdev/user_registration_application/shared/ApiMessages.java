@@ -8,5 +8,7 @@ public final class ApiMessages {
 
     public static final String USER_ALREADY_ADMIN = "User is already an admin";
 
+    public static final String USER_DELETED = "User deleted successfully";
+
     private ApiMessages() {}
 }

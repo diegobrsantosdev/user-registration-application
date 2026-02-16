@@ -1,33 +1,32 @@
 package com.diegobrsantosdev.user_registration_application.security;
+import com.diegobrsantosdev.user_registration_application.config.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final UserDetailsService userDetailsService;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
 
@@ -36,20 +35,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (jwtUtil.validateToken(token)) {
                 String username = jwtUtil.getUsernameFromToken(token);
-                List<String> roles = jwtUtil.getRolesFromToken(token);
 
-                List<GrantedAuthority> authorities =
-                        roles != null
-                                ? roles.stream()
-                                .map(SimpleGrantedAuthority::new)
-                                .collect(Collectors.toList())
-                                : Collections.emptyList();
+                var userDetails =
+                        (UserDetailsImpl) userDetailsService.loadUserByUsername(username);
 
-                UsernamePasswordAuthenticationToken authentication =
+                var authentication =
                         new UsernamePasswordAuthenticationToken(
-                                username,
+                                userDetails,
                                 null,
-                                authorities
+                                userDetails.getAuthorities()
                         );
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);

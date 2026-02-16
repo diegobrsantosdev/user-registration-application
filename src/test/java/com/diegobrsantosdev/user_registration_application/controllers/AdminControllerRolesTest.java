@@ -106,7 +106,7 @@ class AdminControllerRolesTest {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
+    @WithMockUser(username = "user", roles = "USER")
     void userShouldNotAccessListUsers() throws Exception {
         mockMvc.perform(get("/admin/users"))
                 .andExpect(status().isForbidden());
@@ -149,7 +149,7 @@ class AdminControllerRolesTest {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
+    @WithMockUser(username = "user", roles = "USER")
     void userShouldNotPromoteUser() throws Exception {
 
         mockMvc.perform(put("/admin/1/promote"))
