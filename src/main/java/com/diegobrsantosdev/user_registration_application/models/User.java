@@ -96,7 +96,4 @@ public class User {
     @Column(name = "two_factor_secret")
     private String twoFactorSecret;
 
-
-
-
 }

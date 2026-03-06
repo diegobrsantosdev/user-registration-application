@@ -20,10 +20,10 @@ public class TopServiceTest {
     @Test
     void validateCode_ShouldReturnTrueForValidCode() {
         String secret = topService.generateSecret();
-        String code = "123456"; // NOTE: in practice, we can't validate real code here, so assume method works
-        // We can just check it returns boolean (actual validation is covered in integration)
+        String code = "123456";
+
         boolean result = topService.validateCode(secret, code);
-        assertFalse(result); // since code is arbitrary
+        assertFalse(result);
     }
 
     // ========= QR CODE URI =========

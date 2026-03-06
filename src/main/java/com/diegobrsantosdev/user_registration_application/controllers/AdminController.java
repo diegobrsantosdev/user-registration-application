@@ -1,5 +1,7 @@
 package com.diegobrsantosdev.user_registration_application.controllers;
 
+import com.diegobrsantosdev.user_registration_application.config.UserDetailsImpl;
+import com.diegobrsantosdev.user_registration_application.dtos.MessageResponseDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.PromoteUserResponseDTO;
 import com.diegobrsantosdev.user_registration_application.dtos.UserResponseDTO;
 import com.diegobrsantosdev.user_registration_application.models.User;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,5 +42,18 @@ public class AdminController {
                 )
         );
     }
+
+    @DeleteMapping("/users/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteUserAsAdmin(
+            @PathVariable Integer id,
+            @AuthenticationPrincipal UserDetailsImpl adminUser) {
+        MessageResponseDTO dto = userService.deleteUserAsAdmin(id, adminUser.getId());
+        return ResponseEntity.ok(dto);
+    }
+
+
+
 }
+
 
