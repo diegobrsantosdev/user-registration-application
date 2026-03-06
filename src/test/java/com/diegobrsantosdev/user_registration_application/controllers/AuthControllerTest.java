@@ -6,14 +6,16 @@ import com.diegobrsantosdev.user_registration_application.dtos.UserResponseDTO;
 import com.diegobrsantosdev.user_registration_application.exceptions.InvalidCredentialsException;
 import com.diegobrsantosdev.user_registration_application.models.Gender;
 import com.diegobrsantosdev.user_registration_application.models.User;
+import com.diegobrsantosdev.user_registration_application.security.JwtProperties;
 import com.diegobrsantosdev.user_registration_application.security.JwtUtil;
 import com.diegobrsantosdev.user_registration_application.services.AuthService;
+import com.diegobrsantosdev.user_registration_application.viaCep.CepService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,7 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AuthController.class)
+@SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 class AuthControllerTest {
 
@@ -56,7 +58,14 @@ class AuthControllerTest {
     @MockitoBean
     private JwtUtil jwtUtil;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    @MockitoBean
+    private JwtProperties properties;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @MockitoBean
+    CepService cepService;
 
     @Test
     void shouldLoginWithValidCredentials() throws Exception {
