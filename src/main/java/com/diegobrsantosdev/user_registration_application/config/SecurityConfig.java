@@ -1,9 +1,11 @@
 package com.diegobrsantosdev.user_registration_application.config;
 
-import com.diegobrsantosdev.user_registration_application.models.Role;
+import com.diegobrsantosdev.user_registration_application.models.User;
+import com.diegobrsantosdev.user_registration_application.repositories.UserRepository;
 import com.diegobrsantosdev.user_registration_application.security.JwtAuthenticationFilter;
 import com.diegobrsantosdev.user_registration_application.security.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -11,26 +13,20 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
-
-    public SecurityConfig(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
-    }
+    private final UserRepository userRepository;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, UserDetailsService userDetailsService) throws Exception {
@@ -58,7 +54,6 @@ public class SecurityConfig {
             ))
             .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
 
-        // Adicione o filtro de JWT
         http.addFilterBefore(
             new JwtAuthenticationFilter(jwtUtil, userDetailsService),
             UsernamePasswordAuthenticationFilter.class
@@ -73,19 +68,18 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService users(PasswordEncoder passwordEncoder) {
-        UserDetailsImpl admin = new UserDetailsImpl(
-                1,
-                "admin",
-                passwordEncoder.encode("1234"),
-                List.of(Role.ADMIN)
-        );
+    public UserDetailsService users() {
+        return email -> userRepository.findByEmail(email)
+                .map(this::toUserDetails)
+                .orElseThrow(() -> new UsernameNotFoundException(email));
+    }
 
-        return username -> {
-            if (admin.getUsername().equals(username)) {
-                return admin;
-            }
-            throw new UsernameNotFoundException("User not found");
-        };
+    private UserDetailsImpl toUserDetails(User user) {
+        return new UserDetailsImpl(
+                user.getId(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getRoles()
+        );
     }
 }

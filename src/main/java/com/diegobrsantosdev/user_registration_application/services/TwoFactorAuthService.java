@@ -27,15 +27,20 @@ public class TwoFactorAuthService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    public TwoFactorSetupResponseDTO setup2FA(Authentication authentication) throws Exception {
-        User user = getAuthenticatedUser(authentication); // use method
+    public TwoFactorSetupResponseDTO setup2FA(Authentication authentication) {
+        User user = getAuthenticatedUser(authentication);
         String secret = topService.generateSecret();
-        String qrCode = topService.generateQrCodeImage(user.getEmail(), secret);
 
-        user.setTwoFactorSecret(secret);
-        userRepository.save(user);
+        try {
+            String qrCode = topService.generateQrCodeImage(user.getEmail(), secret);
 
-        return new TwoFactorSetupResponseDTO(secret, qrCode);
+            user.setTwoFactorSecret(secret);
+            userRepository.save(user);
+
+            return new TwoFactorSetupResponseDTO(secret, qrCode);
+        } catch (Exception e) {
+            throw new RuntimeException("Error generating 2FA QR Code", e);
+        }
     }
 
     public TwoFactorVerifyResponseDTO verify2FA(TwoFactorVerifyRequestDTO request) {
