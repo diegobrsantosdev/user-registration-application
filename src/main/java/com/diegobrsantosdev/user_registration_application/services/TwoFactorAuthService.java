@@ -65,18 +65,19 @@ public class TwoFactorAuthService {
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        if (!user.getTwoFactorEnabled()) {
-            throw new InvalidDataException("This user does not have 2FA enabled.");
-        }
-
-        boolean valid = topService.validateCode(user.getTwoFactorSecret(), request.code());
-        if (!valid) {
-            throw new InvalidDataException("Invalid 2FA code");
-        }
-
         List<String> roles = user.getRoles().stream()
                 .map(role -> "ROLE_" + role.name())
                 .toList();
+
+        // Se 2FA não estiver habilitado, login normal funciona
+        if (!user.getTwoFactorEnabled()) {
+            return jwtUtil.generateToken(user.getEmail(), roles);
+        }
+
+        // Se 2FA está habilitado, valida o código
+        if (request.code() == null || !topService.validateCode(user.getTwoFactorSecret(), request.code())) {
+            throw new InvalidDataException("Invalid 2FA code");
+        }
 
         return jwtUtil.generateToken(user.getEmail(), roles);
     }

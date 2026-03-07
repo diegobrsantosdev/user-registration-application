@@ -24,7 +24,6 @@ public class AdminController {
 
     private final UserService userService;
 
-    //Get user by id
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Integer id) {
@@ -32,7 +31,6 @@ public class AdminController {
         return ResponseEntity.ok(dto);
     }
 
-    //Get user by cpf
     @GetMapping("/cpf/{cpf}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponseDTO> getUserByCpf(@PathVariable String cpf) {
@@ -41,7 +39,6 @@ public class AdminController {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
-    //Get user by email
     @GetMapping("/email/{email:.+}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponseDTO> getUserByEmail(@PathVariable String email) {
@@ -50,7 +47,6 @@ public class AdminController {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
-    //List all users
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponseDTO> listAllUsers() {
@@ -58,7 +54,6 @@ public class AdminController {
                 .getContent();
     }
 
-    //Promote user as admin
     @PutMapping("/{id}/promote")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PromoteUserResponseDTO> promoteToAdmin(@PathVariable Integer id) {
@@ -73,7 +68,6 @@ public class AdminController {
         );
     }
 
-    //Delete user
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<MessageResponseDTO> deleteUserAsAdmin(
@@ -82,9 +76,6 @@ public class AdminController {
         MessageResponseDTO dto = userService.deleteUserAsAdmin(id, adminUser.getId());
         return ResponseEntity.ok(dto);
     }
-
-
-
 }
 
 

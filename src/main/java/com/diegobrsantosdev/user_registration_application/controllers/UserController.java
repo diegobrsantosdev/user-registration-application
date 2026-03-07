@@ -20,7 +20,7 @@ public class UserController {
 
     private final UserService userService;
 
-    // ========= READ =========
+
     @GetMapping("/me")
     public ResponseEntity<UserResponseDTO> getCurrentUser(
             @AuthenticationPrincipal UserDetailsImpl currentUser) {
@@ -28,7 +28,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
-    // ========= UPDATE =========
     @PutMapping("/me")
     public ResponseEntity<UserResponseDTO> updateCurrentUser(
             @AuthenticationPrincipal UserDetailsImpl currentUser,
@@ -49,7 +48,6 @@ public class UserController {
         );
     }
 
-    // ========= DELETE =========
     @DeleteMapping("/me")
     public ResponseEntity<MessageResponseDTO> deleteOwnUser(
             @AuthenticationPrincipal UserDetailsImpl currentUser) {

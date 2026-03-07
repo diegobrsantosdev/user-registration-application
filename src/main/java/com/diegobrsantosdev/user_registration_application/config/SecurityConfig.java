@@ -34,17 +34,17 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    "/auth/login",
-                    "/auth/register",
-                    "/auth/2fa/login/2fa",
-                    "/auth/2fa/verify",
+                    "/api/v1/auth/login",
+                    "/api/v1/auth/register",
+                    "/api/v1/auth/2fa/loginWithTwoFactor",
+                    "/api/v1/auth/2fa/verifyTwoFactor",
                     "/api/v1/cep/**",
                     "/v3/api-docs/**",
                     "/swagger-ui/**",
                     "/swagger-ui.html",
                     "/h2-console/**"
                 ).permitAll()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/v1/users/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
             )

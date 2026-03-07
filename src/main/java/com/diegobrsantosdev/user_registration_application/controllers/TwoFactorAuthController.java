@@ -22,11 +22,10 @@ public class TwoFactorAuthController {
 
     private final TwoFactorAuthService twoFactorAuthService;
 
-
     @PostMapping("/loginWithTwoFactor")
     public ResponseEntity<Login2faResponseDTO> loginWith2FA(@Valid @RequestBody TwoFactorVerifyRequestDTO request) {
         String token = twoFactorAuthService.loginWith2FA(request);
-        return ResponseEntity.ok(new Login2faResponseDTO(token));
+        return ResponseEntity.ok(new Login2faResponseDTO("Login with 2FA successful!", token));
     }
 
     // Step 2: Setup 2FA (requires user to be logged in)
@@ -35,7 +34,6 @@ public class TwoFactorAuthController {
         TwoFactorSetupResponseDTO response = twoFactorAuthService.setup2FA(authentication);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
 
     // Step 3: Verify 2FA code and activate
     @PostMapping("/verifyTwoFactor")
