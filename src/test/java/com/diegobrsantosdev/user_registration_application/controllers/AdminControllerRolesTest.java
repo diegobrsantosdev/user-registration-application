@@ -5,6 +5,7 @@ import com.diegobrsantosdev.user_registration_application.dtos.UserResponseDTO;
 import com.diegobrsantosdev.user_registration_application.models.Gender;
 import com.diegobrsantosdev.user_registration_application.models.Role;
 import com.diegobrsantosdev.user_registration_application.models.User;
+import com.diegobrsantosdev.user_registration_application.repositories.UserRepository;
 import com.diegobrsantosdev.user_registration_application.security.JwtUtil;
 import com.diegobrsantosdev.user_registration_application.services.UserService;
 import com.diegobrsantosdev.user_registration_application.shared.ApiMessages;
@@ -41,6 +42,10 @@ class AdminControllerRolesTest {
 
     @MockitoBean
     private JwtUtil jwtUtil;
+
+    @MockitoBean
+
+    private UserRepository userRepository;
 
     // Users for testing (from your TestConfig)
     private static final UserResponseDTO USER_1 = new UserResponseDTO(
@@ -99,7 +104,7 @@ class AdminControllerRolesTest {
         when(userService.listAllUsers(any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(USER_1, ADMIN_1)));
 
-        mockMvc.perform(get("/admin/users"))
+        mockMvc.perform(get("/api/v1/admin/users"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(USER_1.id()))
                 .andExpect(jsonPath("$[1].id").value(ADMIN_1.id()));
@@ -108,14 +113,15 @@ class AdminControllerRolesTest {
     @Test
     @WithMockUser(username = "user", roles = "USER")
     void userShouldNotAccessListUsers() throws Exception {
-        mockMvc.perform(get("/admin/users"))
+        mockMvc.perform(get("/api/v1/admin/users"))
                 .andExpect(status().isForbidden());
     }
 
 
     @Test
     void unauthenticatedUserShouldNotAccessListUsers() throws Exception {
-        mockMvc.perform(get("/admin/users"))
+        String path = "/api/v1/admin/users";
+        mockMvc.perform(get(path))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -125,7 +131,7 @@ class AdminControllerRolesTest {
         when(userService.listAllUsers(any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(USER_1, ADMIN_1)));
 
-        mockMvc.perform(get("/admin/users"))
+        mockMvc.perform(get("/api/v1/admin/users"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(USER_1.id()))
                 .andExpect(jsonPath("$[1].id").value(ADMIN_1.id()));
@@ -142,7 +148,7 @@ class AdminControllerRolesTest {
 
         when(userService.promoteToAdmin(1)).thenReturn(promotedUser);
 
-        mockMvc.perform(put("/admin/1/promote"))
+        mockMvc.perform(put("/api/v1/admin/users/1/promote"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(ApiMessages.USER_PROMOTED))
                 .andExpect(jsonPath("$.user.roles[0]").value("ADMIN"));
@@ -152,14 +158,14 @@ class AdminControllerRolesTest {
     @WithMockUser(username = "user", roles = "USER")
     void userShouldNotPromoteUser() throws Exception {
 
-        mockMvc.perform(put("/admin/1/promote"))
+        mockMvc.perform(put("/api/v1/admin/users/1/promote"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     void unauthenticatedUserShouldNotPromoteUser() throws Exception {
 
-        mockMvc.perform(put("/admin/1/promote"))
+        mockMvc.perform(put("/api/v1/admin/users/1/promote"))
                 .andExpect(status().isUnauthorized());
     }
 

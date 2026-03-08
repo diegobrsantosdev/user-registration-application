@@ -22,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,6 +40,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest
@@ -90,7 +92,7 @@ class UserControllerTest {
 
         when(userService.getUserById(USER_ID)).thenReturn(user);
 
-        mockMvc.perform(get("/api/v1/users/" + USER_ID))
+        mockMvc.perform(get("/api/v1/admin/users/" + USER_ID))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(USER_ID))
                 .andExpect(jsonPath("$.name").value(USER_NAME))
@@ -151,6 +153,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("Should list all users paginated")
+    @WithMockUser(roles = "ADMIN")
     void shouldListAllUsersPaginated() throws Exception {
         var user = UserResponseDTOFactory.withCustom(
                 USER_ID, USER_NAME, USER_EMAIL, USER_CPF
@@ -159,12 +162,13 @@ class UserControllerTest {
         when(userService.listAllUsers(any()))
                 .thenReturn(new PageImpl<>(List.of(user), PageRequest.of(0, 10), 1));
 
-        mockMvc.perform(get("/api/v1/users/all"))
+        mockMvc.perform(get("/api/v1/admin/users"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].id").value(USER_ID))
-                .andExpect(jsonPath("$.content[0].name").value(USER_NAME))
-                .andExpect(jsonPath("$.content[0].email").value(USER_EMAIL))
-                .andExpect(jsonPath("$.content[0].cpf").value(USER_CPF));
+                .andExpect(jsonPath("$[0].id").value(USER_ID))
+                .andExpect(jsonPath("$[0].name").value(USER_NAME))
+                .andExpect(jsonPath("$[0].email").value(USER_EMAIL))
+                .andExpect(jsonPath("$[0].cpf").value(USER_CPF))
+                .andDo(print());
     }
 
 

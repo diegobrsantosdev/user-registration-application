@@ -2,6 +2,7 @@ package com.diegobrsantosdev.user_registration_application.controllers;
 import com.diegobrsantosdev.user_registration_application.config.SecurityConfig;
 import com.diegobrsantosdev.user_registration_application.config.UserDetailsImpl;
 import com.diegobrsantosdev.user_registration_application.models.Role;
+import com.diegobrsantosdev.user_registration_application.repositories.UserRepository;
 import com.diegobrsantosdev.user_registration_application.security.JwtUtil;
 import com.diegobrsantosdev.user_registration_application.services.UserService;
 import org.junit.jupiter.api.DisplayName;
@@ -30,6 +31,9 @@ class AdminControllerSecurityTest {
     private UserService userService;
 
     @MockitoBean
+    private UserRepository userRepository;
+
+    @MockitoBean
     private JwtUtil jwtUtil;
 
     @Test
@@ -42,7 +46,7 @@ class AdminControllerSecurityTest {
                 Set.of(Role.USER)
         );
 
-        mockMvc.perform(delete("/admin/users/{id}", 55)
+        mockMvc.perform(delete("/api/v1/admin/users/{1}", 55)
                         .with(user(normalUser)))
                 .andExpect(status().isForbidden());
     }

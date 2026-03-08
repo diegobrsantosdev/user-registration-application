@@ -42,10 +42,10 @@ class AdminControllerTest {
 
     private void autenticaComoAdmin() {
         UserDetailsImpl mockedAdmin = new UserDetailsImpl(
-                100, // ID igual ao do seu mock
+                100,
                 "admin",
                 "senha",
-                List.of(Role.ADMIN) // Usando enum diretamente
+                List.of(Role.ADMIN)
         );
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(
@@ -56,20 +56,17 @@ class AdminControllerTest {
         );
     }
 
-
-    // ========================== DELETE USER ==========================
-
     @Test
     @DisplayName("Should return 200 when admin deletes existing user")
     void adminDeletesUserSuccessfully() throws Exception {
-        autenticaComoAdmin(); // <----- insira sempre antes do mockmvc
+        autenticaComoAdmin();
 
         int targetUserId = 55;
 
         when(userService.deleteUserAsAdmin(targetUserId, 100))
                 .thenReturn(new MessageResponseDTO("User deleted successfully"));
 
-        mockMvc.perform(delete("/admin/users/{id}", targetUserId))
+        mockMvc.perform(delete("/api/v1/admin/users/{1}", targetUserId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("User deleted successfully"));
     }
@@ -84,7 +81,7 @@ class AdminControllerTest {
         when(userService.deleteUserAsAdmin(notFoundUserId, 100))
                 .thenThrow(new ResourceNotFoundException("User not found"));
 
-        mockMvc.perform(delete("/admin/users/{id}", notFoundUserId))
+        mockMvc.perform(delete("/api/v1/admin/users/{1}", notFoundUserId))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("User not found"));
     }
