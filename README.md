@@ -1,251 +1,430 @@
-# User Registration Application
-## Descrição do Projeto
-Aplicação de cadastro de usuários desenvolvida com o ecossistema Spring (Spring Boot, Spring Data JPA, Spring Security), integrando consulta de CEP via [ViaCEP](https://viacep.com.br) e validando campos críticos (CPF, email, senha).
-Permite criar, consultar, listar, atualizar dados de usuários e consultar endereço por CEP de forma automatizada.
+# User Registration API
 
-![Postar usuário](https://diegobrsantosdev.github.io/user-registration-application/assets/captura22.png)
+Português | English
 
-Legenda: Cadastro pelo endpoint de criação de usuário.
+---
 
-## Arquitetura & Organização
-O projeto segue arquitetura em camadas, dividindo responsabilidades de forma clara e modular:
-``` 
-src/main/java/com/diegobrsantosdev/user_registration_application
+# Português
+
+## Descrição
+
+API de cadastro, autenticação e gerenciamento de usuários desenvolvida com **Spring Boot**.
+
+Esta API fornece uma solução completa para:
+
+- registro de usuários
+- autenticação baseada em **JWT**
+- **Two-Factor Authentication (2FA)**
+- controle de acesso baseado em roles (**ADMIN / USER**)
+
+O projeto segue boas práticas de segurança, arquitetura limpa e testes automatizados, sendo adequado para aplicações backend em ambientes reais.
+
+---
+
+![Cadastro de usuário](https://diegobrsantosdev.github.io/user-registration-application/assets/captura22.jpg)
+
+
+## Principais Funcionalidades
+
+### Autenticação e Segurança
+
+- Autenticação baseada em JWT
+- Two-Factor Authentication (TOTP)
+- Controle de acesso baseado em roles (ADMIN / USER)
+- Endpoints protegidos utilizando Bearer Token
+- Senhas criptografadas antes de serem armazenadas no banco de dados
+- Configuração de segurança utilizando Spring Security
+- Filtro de autenticação JwtAuthenticationFilter
+- Dados sensíveis nunca são expostos pela API
+
+![Validação 2FA](https://diegobrsantosdev.github.io/user-registration-application/assets/screenshot.18.jpg)
+
+---
+
+### Gerenciamento de Usuários
+
+- Registro de usuário
+- Login com JWT
+- Login com Two-Factor Authentication
+- Atualização de dados do usuário
+- Alteração de senha
+- Exclusão da própria conta
+
+### Administração
+
+- Listagem de usuários
+- Busca de usuários por ID
+- Busca de usuários por email
+- Busca de usuários por CPF
+- Promoção de usuário para ADMIN
+- Exclusão de usuários
+
+### Funcionalidades Adicionais
+
+- Validação de CPF
+- Integração para consulta de CEP
+- Tratamento global de exceções
+- Respostas padronizadas da API
+- Arquitetura baseada em DTOs
+
+---
+
+## Arquitetura da API
+
+
+Client
 │
-├─ config/         # Configurações do projeto (segurança, Swagger, etc)
-├─ controllers/    # Endpoints REST (Usuário, CEP)
-├─ dtos/           # Data Transfer Objects para requisição/resposta
-├─ exceptions/     # Exceções e tratamento global
-├─ mappers/        # Conversão entre entidades e DTOs
-├─ models/         # Entidades JPA
-├─ repositories/   # Interfaces Spring Data JPA
-├─ services/       # Regras de negócio
-├─ validators/     # Validações customizadas (CPF, senha, etc)
-├─ viaCep/         # Integração com API ViaCep
+▼
+Controllers
 │
-└─ UserRegistrationApplication.java
-```
-## Tecnologias e Ferramentas Utilizadas
-- **Java 24**, Jakarta EE
-- **Spring Boot**, **Spring Data JPA**, **Spring Security**
-- **Lombok**
-- **H2 Database** (testes)
-- **Maven**
-- **Mockito / JUnit 5**, **MockMvc**
-- **Docker**
-- **AWS EC2** (deploy incluso)
-- **Swagger/OpenAPI** (documentação se configurada)
-
-## Principais Endpoints
-
-| Método | Endpoint | Descrição |
-| --- | --- | --- |
-| POST | `/api/v1/users` | Cadastrar novo usuário |
-| GET | `/api/v1/users/{id}` | Consultar usuário por ID |
-| GET | `/api/v1/users?cpf=...` | Consultar usuário por CPF |
-| GET | `/api/v1/users?email=...` | Consultar usuário por email |
-| GET | `/api/v1/users/all` | Listar usuários (paginação) |
-| PUT | `/api/v1/users/{id}` | Atualizar dados do usuário |
-| PUT | `/api/v1/users/{id}/password` | Atualizar senha do usuário |
-| DELETE | `/api/v1/users/{id}` | Excluir usuário |
-| GET | `/api/v1/cep/{cep}` | Buscar endereço por CEP |
-
-![Swagger](https://diegobrsantosdev.github.io/user-registration-application/assets/captura21.png)
-
-Legenda: Documentação interativa da API com Swagger UI.
-
-
-##  Funcionalidades em Destaque
-- **Criptografia de Senhas:**
-As senhas dos usuários são protegidas através de criptografia utilizando algoritmos de hash robustos fornecidos pelo Spring Security, via implementação do . Isso garante que nenhuma senha seja armazenada em texto puro no banco de dados, dificultando acessos não autorizados, mesmo em caso de vazamento de dados. Durante o processo de autenticação e alteração de senha, todas as comparações e atualizações são realizadas de forma segura, seguindo as melhores práticas do mercado para proteção de informações sensíveis. `PasswordEncoder`
-
-![Banco de dados h2](https://diegobrsantosdev.github.io/user-registration-application/assets/captura25.png)
-
-Legenda: Visualização do banco de dados em memória (H2).
-
-- **Integração ViaCEP:**
-Busca automática de informações de endereço via API pública.
-
-![Consulta por cep](https://diegobrsantosdev.github.io/user-registration-application/assets/captura18.png)     ![Consulta por cep incorreta](https://diegobrsantosdev.github.io/user-registration-application/assets/captura19.png)
-
-Legenda: À esquerda, consulta de CEP válida; à direita, resposta para CEP inexistente.
-
-- **Validações Personalizadas:**
-CPF único e válido, e-mail único, mensagens de erro padronizadas.
-- **Paginação e Filtros:**
-Listagem paginada, busca por e-mail ou CPF.
-- **DTOs:**
-Garantia de interface REST bem definida: segurança e desacoplamento.
-
-## Exceções Personalizadas
-- : recurso (usuário, etc) não encontrado `ResourceNotFoundException`
-- : CEP consultado não existe `CepNotFoundException`
-- Handler global de exceções retornando erro padrão () `StandardError`
-
-## Testes Automatizados
-- **JUnit 5 + Mockito:** testes de serviço, validação de regras.
-- **MockMvc:** BATs dos endpoints REST.
-- Testes rodam automaticamente na build Maven.
-
-## Docker
-Você pode rodar facilmente com Docker:
-``` bash
-docker build -t user-registration-app .
-docker run -p 8080:8080 user-registration-app
-```
-
-## 🚀 Como rodar localmente
-1. **Clone o repositório:**
-``` bash
-   git clone https://github.com/seu-usuario/user-registration-application.git
-```
-1. **Compile:**
-``` bash
-   mvn clean install
-```
-1. **Execute:**
-``` bash
-   mvn spring-boot:run
-```
-ou utilize Docker conforme acima.
-1. **Acesse:**
-    - [http://localhost:8080](http://localhost:8080)
-    - (Opcional) Swagger UI: `/swagger-ui.html`
-    - Console H2 DB: (JDBC URL: ) `/h2-console``jdbc:h2:mem:testdb`
-
-## Extras
-- CORS configurado para integração front-end
-- Mensagens de erro padronizadas
-- Estrutura pronta para CI/CD
-- OpenAPI disponível (caso ativada)
-
-## 📝 Contato
-Diego Santos
-[E-mail](mailto:diegobrsantosdev@gmail.com)
-[LinkedIn](https://www.linkedin.com/in/diegobrsantos/)
-
-
-
-# User Registration Application
-## Project Description
-A user registration application developed with the Spring ecosystem (Spring Boot, Spring Data JPA, Spring Security), integrating ZIP code lookup via [ViaCEP](https://viacep.com.br) and validating critical fields (CPF, email, password). Allows you to create, query, list, update user data and automatically fetch address data by ZIP code.
-
-![Post user](https://diegobrsantosdev.github.io/user-registration-application/assets/captura22.png)
-
-Caption: Create user via the user registration endpoint.
-
-## Architecture & Organization
-The project follows a layered architecture with clearly divided, modular responsibilities:
-``` 
-src/main/java/com/diegobrsantosdev/user_registration_application
+▼
+Services
 │
-├─ config/         # Project configuration (security, Swagger, etc)
-├─ controllers/    # REST endpoints (User, ZIP code)
-├─ dtos/           # Data Transfer Objects for request/response
-├─ exceptions/     # Exceptions and global error handling
-├─ mappers/        # Mapping between entities and DTOs
-├─ models/         # JPA entities
-├─ repositories/   # Spring Data JPA interfaces
-├─ services/       # Business logic
-├─ validators/     # Custom validations (CPF, password, etc)
-├─ viaCep/         # Integration with ViaCep API
+▼
+Repositories
 │
-└─ UserRegistrationApplication.java
+▼
+Database
+
+
+Fluxo de segurança:
+
+
+Client Request
+│
+▼
+JwtAuthenticationFilter
+│
+▼
+Spring Security
+│
+▼
+Controller
+
+---
+
+## Endpoints da API
+
+![Swagger](https://diegobrsantosdev.github.io/user-registration-application/assets/captura21.jpg)
+
+---
+
+## Segurança
+
+A segurança da aplicação é implementada utilizando **Spring Security**.
+
+Componentes principais:
+
+- SecurityConfig
+- SecurityFilterChain
+- JwtAuthenticationFilter
+- Autorização baseada em roles (ADMIN / USER)
+- Autenticação com Bearer Token em endpoints protegidos
+
+As senhas são criptografadas antes de serem armazenadas no banco de dados.
+
+![Banco de dados](https://diegobrsantosdev.github.io/user-registration-application/assets/captura25.png)
+
+---
+
+## Integração com CEP
+
+A API possui funcionalidade de consulta de CEP com sua própria estrutura:
+
+- Controller
+- Service
+- DTO
+- Exceções específicas
+- Handler de resposta
+
+<p align="center">
+  <img src="https://diegobrsantosdev.github.io/user-registration-application/assets/captura18.png" alt="Consulta via CEP" width="45%">
+  <img src="https://diegobrsantosdev.github.io/user-registration-application/assets/captura18.png" alt="CEP não encontrado" width="45%">
+</p>
+
+---
+
+## DTOs
+
+O projeto utiliza **12 classes DTO** para separar o contrato da API dos modelos internos.
+
+---
+
+## Validação
+
+Validadores personalizados garantem a integridade dos dados recebidos.
+
+- Validação de CPF
+- Validação de requisições utilizando DTOs
+
+---
+
+## Tratamento de Exceções
+
+A API possui **11 classes de exceção personalizadas**, com um handler global responsável por padronizar as respostas de erro.
+
+Isso garante respostas consistentes e seguras para falhas da aplicação.
+
+---
+
+## Testes
+
+O projeto possui **83 testes automatizados**, utilizam MockitoBean para simulação de dependências, e são organizados em:
+
+- controllers
+- services
+- security
+- dtos
+- validators
+- integration tests
+- cep tests
+
+---
+
+## Execução do Projeto
+
+```bash
+Executar utilizando Maven:
+
+mvn spring-boot:run
+
+Execução com Docker:
+
+Build da imagem:
+
+docker build -t user-registration-api .
+
+Executar container:
+
+docker run -p 8080:8080 user-registration-api
+
 ```
-## Technologies and Tools Used
-- **Java 24**, Jakarta EE
-- **Spring Boot**, **Spring Data JPA**, **Spring Security**
-- **Lombok**
-- **H2 Database** (tests)
-- **Maven**
-- **Mockito / JUnit 5**, **MockMvc**
-- **Docker**
-- **AWS EC2** (ready for deployment)
-- **Swagger/OpenAPI** (documentation if enabled)
 
-## Main Endpoints
+**Acessar API:**
 
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| POST | `/api/v1/users` | Register a new user |
-| GET | `/api/v1/users/{id}` | Get user by ID |
-| GET | `/api/v1/users?cpf=...` | Get user by CPF |
-| GET | `/api/v1/users?email=...` | Get user by email |
-| GET | `/api/v1/users/all` | List all users (paginated) |
-| PUT | `/api/v1/users/{id}` | Update user data |
-| PUT | `/api/v1/users/{id}/password` | Update user password |
-| DELETE | `/api/v1/users/{id}` | Delete user |
-| GET | `/api/v1/cep/{cep}` | Lookup address by ZIP code |
+http://localhost:8080
 
-![Swagger](https://diegobrsantosdev.github.io/user-registration-application/assets/captura21.png)
+**Documentação da API**
 
-Caption: Interactive API documentation with Swagger UI.
+http://localhost:8080/swagger-ui.html
 
-## Key Features
-- **Password Encryption:**
-User passwords are protected through encryption using robust hash algorithms provided by Spring Security, via the implementation. This ensures that no password is stored in plain text in the database, making unauthorized access much more difficult, even in case of a data leak. During authentication or password updates, all comparisons and updates happen securely, following industry best practices for sensitive information protection. `PasswordEncoder`
-
-![H2 Database](https://diegobrsantosdev.github.io/user-registration-application/assets/captura25.png)
-
-Caption: Visualization of the in-memory database (H2).
-
-- **ViaCEP Integration:**
-Automatic address lookup using the public API.
-
-![Search by cep](https://diegobrsantosdev.github.io/user-registration-application/assets/captura18.png)     ![Incorrect search by cep](https://diegobrsantosdev.github.io/user-registration-application/assets/captura19.png)
-
-Caption: Left: valid ZIP code query; Right: response for nonexistent ZIP code.
-
-- **Custom Validations:**
-Unique and valid CPF, unique email, standardized error messages.
-- **Pagination and Filters:**
-Paginated listing, email or CPF search.
-- **DTOs:**
-Ensures a well-defined REST interface for better security and decoupling.
-
-## Custom Exceptions
-- : (user or other resource) not found `ResourceNotFoundException`
-- : ZIP code not found `CepNotFoundException`
-- Global exception handler returns standard error () `StandardError`
-
-## Automated Tests
-- **JUnit 5 + Mockito:** service and business rule tests.
-- **MockMvc:** REST endpoint BATs.
-- Tests run automatically on Maven build.
-
-## Docker
-You can easily run with Docker:
-``` bash
-docker build -t user-registration-app .
-docker run -p 8080:8080 user-registration-app
-```
-## 🚀 How to Run Locally
-1. **Clone the repository:**
-``` bash
-   git clone https://github.com/your-user/user-registration-application.git
-```
-1. **Compile:**
-``` bash
-   mvn clean install
-```
-1. **Run:**
-``` bash
-   mvn spring-boot:run
-```
-Or use Docker as above.
-1. **Access:**
-    - [http://localhost:8080](http://localhost:8080)
-    - (Optional) Swagger UI: `/swagger-ui.html`
-    - H2 DB Console: (JDBC URL: ) `/h2-console``jdbc:h2:mem:testdb`
-
-## Extras
-- CORS configured for front-end integration
-- Standardized error messages
-- Structure ready for CI/CD
-- OpenAPI available (if enabled)
+---
 
 ## 📝 Contact
+
 Diego Santos
-[E-mail](mailto:diegobrsantosdev@gmail.com)
-[LinkedIn](https://www.linkedin.com/in/diegobrsantos/)
+
+[E-mail](mailto:diegobrsantosdev@gmail.com)                                  [LinkedIn](https://www.linkedin.com/in/diegobrsantos/)
+
+---
+
+# English
+
+## Description
+
+User registration, authentication and user management API developed with **Spring Boot**.
+
+This API provides a complete solution for:
+
+- user registration
+- **JWT-based authentication**
+- **Two-Factor Authentication (2FA)**
+- role-based access control (**ADMIN / USER**)
+
+The project follows security best practices, clean architecture and automated testing, making it suitable for backend applications in real-world environments.
+
+---
+
+![User registration](https://diegobrsantosdev.github.io/user-registration-application/assets/captura22.jpg)
+
+
+## Main Features
+
+### Authentication and Security
+
+- JWT-based authentication
+- Two-Factor Authentication (TOTP)
+- Role-based access control (ADMIN / USER)
+- Protected endpoints using Bearer Token
+- Passwords encrypted before being stored in the database
+- Security configuration using Spring Security
+- Authentication filter JwtAuthenticationFilter
+- Sensitive data is never exposed through the API
+
+![2FA validation](https://diegobrsantosdev.github.io/user-registration-application/assets/screenshot.18.jpg)
+
+---
+
+### User Management
+
+- User registration
+- Login with JWT
+- Login with Two-Factor Authentication
+- Update user information
+- Change password
+- Delete own account
+
+### Administration
+
+- List users
+- Find users by ID
+- Find users by email
+- Find users by CPF
+- Promote user to ADMIN
+- Delete users
+
+### Additional Features
+
+- CPF validation
+- CEP lookup integration
+- Global exception handling
+- Standardized API responses
+- DTO-based architecture
+
+---
+
+## API Architecture
+
+
+Client
+│
+▼
+Controllers
+│
+▼
+Services
+│
+▼
+Repositories
+│
+▼
+Database
+
+
+Security flow:
+
+
+Client Request
+│
+▼
+JwtAuthenticationFilter
+│
+▼
+Spring Security
+│
+▼
+Controller
+
+---
+
+## API Endpoints
+
+![Swagger](https://diegobrsantosdev.github.io/user-registration-application/assets/captura21.jpg)
+
+---
+
+## Security
+
+Application security is implemented using **Spring Security**.
+
+Main components:
+
+- SecurityConfig
+- SecurityFilterChain
+- JwtAuthenticationFilter
+- Role-based authorization (ADMIN / USER)
+- Bearer Token authentication for protected endpoints
+
+Passwords are encrypted before being stored in the database.
+
+![Database](https://diegobrsantosdev.github.io/user-registration-application/assets/captura25.png)
+
+---
+
+## CEP Integration
+
+The API includes a CEP lookup feature with its own structure:
+
+- Controller
+- Service
+- DTO
+- Specific exceptions
+- Response handler
+
+<p align="center">
+  <img src="https://diegobrsantosdev.github.io/user-registration-application/assets/captura18.png" alt="CEP lookup" width="45%">
+  <img src="https://diegobrsantosdev.github.io/user-registration-application/assets/captura18.png" alt="CEP not found" width="45%">
+</p>
+
+---
+
+## DTOs
+
+The project uses **12 DTO classes** to separate the API contract from internal models.
+
+---
+
+## Validation
+
+Custom validators ensure the integrity of the received data.
+
+- CPF validation
+- Request validation using DTOs
+
+---
+
+## Exception Handling
+
+The API contains **11 custom exception classes**, with a global handler responsible for standardizing error responses.
+
+This ensures consistent and secure responses for application failures.
+
+---
+
+## Tests
+
+The project contains **83 automated tests**, using MockitoBean for dependency mocking, organized into:
+
+- controllers
+- services
+- security
+- dtos
+- validators
+- integration tests
+- cep tests
+
+---
+
+## Running the Application
+
+```bash
+Run using Maven:
+
+mvn spring-boot:run
+
+Running with Docker:
+
+Build image:
+
+docker build -t user-registration-api .
+
+Run container:
+
+docker run -p 8080:8080 user-registration-api
+
+Access API:
+
+http://localhost:8080
+
+API Documentation
+
+http://localhost:8080/swagger-ui.html
+```
+
+## 📝 Contact
+
+Diego Santos
+
+[E-mail](mailto:diegobrsantosdev@gmail.com)                                     [LinkedIn](https://www.linkedin.com/in/diegobrsantos/)
+
 
