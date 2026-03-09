@@ -109,16 +109,16 @@ class UserIntegrationTest {
         );
 
         // register test
-        mockMvc.perform(post("/api/v1/users")
+        mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value(TEST_NAME))
-                .andExpect(jsonPath("$.email").value(TEST_EMAIL))
-                .andExpect(jsonPath("$.cpf").value(TEST_CPF));
+                .andExpect(jsonPath("$.user.name").value(TEST_NAME))
+                .andExpect(jsonPath("$.user.email").value(TEST_EMAIL))
+                .andExpect(jsonPath("$.user.cpf").value(TEST_CPF));
 
         // get by cpf
-        mockMvc.perform(get("/api/v1/users").param("cpf", TEST_CPF))
+        mockMvc.perform(get("/api/v1/admin/users/cpf/{cpf}", TEST_CPF))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.cpf").value(TEST_CPF))
                 .andExpect(jsonPath("$.email").value(TEST_EMAIL))

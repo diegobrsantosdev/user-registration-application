@@ -44,7 +44,7 @@ class TwoFactorAuthControllerTest {
         TwoFactorSetupResponseDTO responseDTO = new TwoFactorSetupResponseDTO(SECRET, QR_CODE);
         Mockito.when(twoFactorAuthService.setup2FA(auth)).thenReturn(responseDTO);
 
-        mockMvc.perform(post("/auth/2fa/setup")
+        mockMvc.perform(post("/api/v1/auth/2fa/setupTwoFactor")
                         .principal(auth))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.secret").value(SECRET))
@@ -63,7 +63,7 @@ class TwoFactorAuthControllerTest {
         Mockito.when(twoFactorAuthService.verify2FA(eq(request)))
                 .thenReturn(response);
 
-        mockMvc.perform(post("/auth/2fa/verify")
+        mockMvc.perform(post("/api/v1/auth/2fa/verifyTwoFactor")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())

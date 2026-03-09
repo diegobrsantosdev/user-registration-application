@@ -69,12 +69,10 @@ public class TwoFactorAuthService {
                 .map(role -> "ROLE_" + role.name())
                 .toList();
 
-        // Se 2FA não estiver habilitado, login normal funciona
         if (!user.getTwoFactorEnabled()) {
-            return jwtUtil.generateToken(user.getEmail(), roles);
+            throw new InvalidDataException("This user does not have 2FA enabled.");
         }
 
-        // Se 2FA está habilitado, valida o código
         if (request.code() == null || !topService.validateCode(user.getTwoFactorSecret(), request.code())) {
             throw new InvalidDataException("Invalid 2FA code");
         }

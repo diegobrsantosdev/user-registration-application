@@ -120,7 +120,7 @@ class AuthControllerRegisterTest {
         Mockito.when(authService.register(Mockito.any(UserRegisterDTO.class)))
                 .thenReturn(response);
 
-        mockMvc.perform(post("/auth/register")
+        mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(REGISTER_BODY))
                 .andExpect(status().isCreated())
@@ -135,7 +135,7 @@ class AuthControllerRegisterTest {
         Mockito.when(authService.register(Mockito.any(UserRegisterDTO.class)))
                 .thenThrow(new InvalidCredentialsException("Email already in use."));
 
-        mockMvc.perform(post("/auth/register")
+        mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(REGISTER_BODY))
                 .andExpect(status().isUnauthorized());
