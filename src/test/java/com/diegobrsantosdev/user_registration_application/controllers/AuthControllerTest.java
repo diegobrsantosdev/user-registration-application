@@ -106,7 +106,7 @@ class AuthControllerTest {
                 PASSWORD
         );
 
-        mockMvc.perform(post("/auth/login")
+        mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isOk())
@@ -128,7 +128,7 @@ class AuthControllerTest {
                 "wrongPass"
         );
 
-        mockMvc.perform(post("/auth/login")
+        mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isUnauthorized());
@@ -145,7 +145,7 @@ class AuthControllerTest {
                 "whatever"
         );
 
-        mockMvc.perform(post("/auth/login")
+        mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isUnauthorized());

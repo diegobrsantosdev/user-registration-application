@@ -27,15 +27,20 @@ public class TwoFactorAuthService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    public TwoFactorSetupResponseDTO setup2FA(Authentication authentication) throws Exception {
-        User user = getAuthenticatedUser(authentication); // use method
+    public TwoFactorSetupResponseDTO setup2FA(Authentication authentication) {
+        User user = getAuthenticatedUser(authentication);
         String secret = topService.generateSecret();
-        String qrCode = topService.generateQrCodeImage(user.getEmail(), secret);
 
-        user.setTwoFactorSecret(secret);
-        userRepository.save(user);
+        try {
+            String qrCode = topService.generateQrCodeImage(user.getEmail(), secret);
 
-        return new TwoFactorSetupResponseDTO(secret, qrCode);
+            user.setTwoFactorSecret(secret);
+            userRepository.save(user);
+
+            return new TwoFactorSetupResponseDTO(secret, qrCode);
+        } catch (Exception e) {
+            throw new RuntimeException("Error generating 2FA QR Code", e);
+        }
     }
 
     public TwoFactorVerifyResponseDTO verify2FA(TwoFactorVerifyRequestDTO request) {
@@ -60,18 +65,17 @@ public class TwoFactorAuthService {
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+        List<String> roles = user.getRoles().stream()
+                .map(role -> "ROLE_" + role.name())
+                .toList();
+
         if (!user.getTwoFactorEnabled()) {
             throw new InvalidDataException("This user does not have 2FA enabled.");
         }
 
-        boolean valid = topService.validateCode(user.getTwoFactorSecret(), request.code());
-        if (!valid) {
+        if (request.code() == null || !topService.validateCode(user.getTwoFactorSecret(), request.code())) {
             throw new InvalidDataException("Invalid 2FA code");
         }
-
-        List<String> roles = user.getRoles().stream()
-                .map(role -> "ROLE_" + role.name())
-                .toList();
 
         return jwtUtil.generateToken(user.getEmail(), roles);
     }

@@ -173,7 +173,9 @@ public class TwoFactorAuthServiceTest {
 
         InvalidDataException ex = assertThrows(InvalidDataException.class,
                 () -> twoFactorAuthService.loginWith2FA(request));
+
         assertEquals("This user does not have 2FA enabled.", ex.getMessage());
+        verify(topService, never()).validateCode(anyString(), anyString());
     }
 
     @Test
