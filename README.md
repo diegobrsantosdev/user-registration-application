@@ -4,7 +4,7 @@ Português | English
 
 ---
 
-# Português
+## Português
 
 ## Descrição
 
@@ -218,7 +218,9 @@ Diego Santos
 
 ---
 
-# English
+## English
+
+# User Registration API
 
 ## Description
 
